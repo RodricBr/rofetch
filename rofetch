@@ -7,17 +7,17 @@ VERDE="\033[1;32m"
 FIM="\033[0;00m"
 
 # ASCII: https://www.twitchquotes.com/ascii-art-generator Width: 25
-echo -e "\n⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
+echo -e "\n${VERME2}⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
 echo -e "⣿⣿⣿⠿⠿⠟⠛⠛⠛⠋⠉⠉⠉⠉⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
-echo -e "⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿"
+echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿"
 echo -e "⣿⣿⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⣶⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t $(echo $DESKTOP_SESSION)"
-echo -e "⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term${FIM}:\t\t $(echo $TERM)"
-echo -e "⣿⣿⡇⠀⠀⠀⠘⠛⠛⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿  ${VERME}IPv4 (Local)${FIM}:\t $(wget -q --spider "https://www.google.com/"; if [[ "$?" == "0" ]]; then echo -e "${LIPV4} ${VERDE}(Connected)${FIM}"; else echo -e "${LIPV4} ${VERME}(Not connected)${FIM}"; fi)"
-echo -e "⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿  ${VERME}Kernel${FIM}:\t\t $(uname -r)"
-echo -e "⣿⣿⡇⠀⠀⠀⣶⣶⣆⠀⠀⠀⠲⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Uptime${FIM}:\t\t $(uptime | awk '{print $3" "$4"s"}' | tr -d ',')" #antigo: echo $(uptime) | sed 's/^.\+up\ \+\([^,]*\).*/\1/g'
-echo -e "⣿⣿⡇⠀⠀⠀⢹⣿⣿⣆⠀⠀⠀⠈⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿  $(free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')"
-echo -e "⣿⣿⣇⠀⠀⠀⠘⣿⣿⣿⣧⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Shell${FIM}:\t\t $(ps | awk '{print $4}' | sed -n 2p | tr -d '-')"
-echo -e "⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}OS${FIM}:\t\t\t $(cat /etc/os-release | head -n1 | tr -d '"','=','PRETTY_NAME')"
-echo -e "⣿⣿⣿⣀⣀⡀⠀⠈⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿"
+echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term${FIM}:\t\t $(echo $TERM)"
+echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⠘⠛⠛⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿  ${VERME}IPv4 (Local)${FIM}:\t $(wget -q --spider "https://www.google.com/"; if [[ "$?" == "0" ]]; then echo -e "${LIPV4} ${VERDE}(Connected)${FIM}"; else echo -e "${LIPV4} ${VERME}(Not connected)${FIM}"; fi)"
+echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿  ${VERME}Kernel${FIM}:\t\t $(uname -r)"
+echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⣶⣶⣆⠀⠀⠀⠲⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Uptime${FIM}:\t\t $(uptime | awk '{print $3" "$4"s"}' | tr -d ',')" #antigo: echo $(uptime) | sed 's/^.\+up\ \+\([^,]*\).*/\1/g'
+echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⢹⣿⣿⣆⠀⠀⠀⠈⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿  $(free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')"
+echo -e "${VERME2}⣿⣿⣇⠀⠀⠀⠘⣿⣿⣿⣧⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Shell${FIM}:\t\t $(ps | awk '{print $4}' | sed -n 2p | tr -d '-')"
+echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}OS${FIM}:\t\t\t $(cat /etc/os-release | head -n1 | tr -d '"','=','PRETTY_NAME')"
+echo -e "${VERME2}⣿⣿⣿⣀⣀⡀⠀⠈⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿"
 echo -e "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿\033[38;5;57m$(curl -s "https://type.fit/api/quotes" | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1 | tr -d '"')"${FIM}
 exit 0
