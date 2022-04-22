@@ -1,7 +1,5 @@
 <h1 align="center">roFetch</h2>
 
-<h4 align="center"><strong>roFetch</strong></h4>
-
 **roFetch(Rodric Fetch) My home-made system fetching program with an addition of random motivational texts for you!**
 
 <hr>
