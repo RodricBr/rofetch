@@ -1,5 +1,9 @@
 <h1 align="center">roFetch</h2>
 
+<p align="center">
+  <img border="0" draggable="false" src="./rofetch.png" alt="Spidery Chest">
+</p>
+
 **roFetch(Rodric Fetch) My home-made system fetching program with an addition of random motivational texts for you!**
 
 <hr>
