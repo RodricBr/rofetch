@@ -10,10 +10,10 @@
 
 ## Instalation & Execution <br>
 
-> Required:
-> net-tools (sudo apt-get install net-tools)
-> [curl](https://curl.se/docs/install.html)
-> [jq](https://stedolan.github.io/jq/download/)
+> Required: 
+> net-tools (sudo apt-get install net-tools) <br>
+> [curl](https://curl.se/docs/install.html) <br>
+> [jq](https://stedolan.github.io/jq/download/) <br>
 
 ```bash
 git clone https://github.com/RodricBr/rofetch
