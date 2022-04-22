@@ -4,7 +4,7 @@
   <img border="0" draggable="false" src="./rofetch.png" alt="roFetch example" title="Isn't it simply awesome?!">
 </p>
 
-**roFetch(Rodric Fetch) My home-made GNU/Linux system fetching program. With an addition of random motivational texts for you!**
+**roFetch(Rodric Fetch), my home-made GNU/Linux system fetching program. With an addition of random motivational texts for you!**
 
 <hr>
 
