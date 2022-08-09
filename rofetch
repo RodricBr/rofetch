@@ -6,7 +6,7 @@
 
 export LANG=C.UTF-8
 
-LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | head -n1)"
+LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | grep -Ev "127.0.0.*" | head -n1)"
 
 VERME="\033[1;31m"
 VERME2="\033[0;31m"
