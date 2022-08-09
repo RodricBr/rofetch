@@ -1,10 +1,10 @@
 <h1 align="center">roFetch</h2>
 
 <p align="center">
-  <img border="0" draggable="false" src="./rofetch.png" alt="roFetch example" title="Isn't it simply awesome?!">
+  <img border="0" draggable="false" src="./image/rofetch.png" alt="roFetch example" title="Isn't it simply awesome?!">
 </p>
 
-**roFetch(Rodric Fetch), my home-made GNU/Linux system fetching program. With an addition of random motivational texts for you!**
+**roFetch (Rodric Fetch), my home-made GNU/Linux system fetching program. With an addition of random motivational texts for you!**
 
 <hr>
 
