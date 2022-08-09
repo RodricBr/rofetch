@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+# Version 2.0
+# Updated IPv4 grepping, quote color, and fixed errors
+# Might wanna add into the future: echo -n $(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}")
+
 export LANG=C.UTF-8
 
 LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | head -n1)"
