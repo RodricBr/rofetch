@@ -18,14 +18,14 @@ FIM="\033[0;00m"
 echo -e "\n${VERME2}⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
 echo -e "⣿⣿⣿⠿⠿⠟⠛⠛⠛⠋⠉⠉⠉⠉⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
 echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿"
-echo -e "⣿⣿⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⣶⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t $(echo $DESKTOP_SESSION)"
+echo -e "⣿⣿⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⣶⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿  ${VERME}OS${FIM}:\t\t\t $(grep "PRETTY" /etc/os-release | cut -d"=" -f2 | tr -d '"')"
 echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term${FIM}:\t\t $(echo -ne "$TERM ($(tty))")"
 echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⠘⠛⠛⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿  ${VERME}IPv4 (Local)${FIM}:\t $(wget -q --spider "https://www.google.com/"; [[ "$?" == "0" ]]&& echo -e "${LIPV4} ${VERDE}(Connected)${FIM}" || echo -e "${LIPV4} ${VERME}(Not connected)${FIM}")"
 echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿  ${VERME}Kernel${FIM}:\t\t $(uname -smr)"
 echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⣶⣶⣆⠀⠀⠀⠲⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Uptime${FIM}:\t\t $(uptime | awk '{print $3" "$4"s"}' | tr -d ',')" #antigo: echo $(uptime) | sed 's/^.\+up\ \+\([^,]*\).*/\1/g'
 echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⢹⣿⣿⣆⠀⠀⠀⠈⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿  $(free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')"
 echo -e "${VERME2}⣿⣿⣇⠀⠀⠀⠘⣿⣿⣿⣧⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Shell${FIM}:\t\t $(ps | awk '{print $4}' | sed -n 2p | tr -d '-')"
-echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}OS${FIM}:\t\t\t $(grep "PRETTY" /etc/os-release | cut -d"=" -f2 | tr -d '"')"
+echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t $(echo $DESKTOP_SESSION)"
 echo -e "${VERME2}⣿⣿⣿⣀⣀⡀⠀⠈⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿"
 echo -e "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿${ROXO}$(curl -s "https://type.fit/api/quotes" 2>/dev/null | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1 | tr -d '"')"${FIM}
 exit 0
