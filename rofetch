@@ -7,6 +7,7 @@
 export LANG=C.UTF-8
 
 LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | grep -Ev "127.0.0.*" | head -n1)"
+MSG_=$(curl -s "https://type.fit/api/quotes" 2>/dev/null | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1)
 
 VERME="\033[1;31m"
 VERME2="\033[0;31m"
@@ -27,5 +28,5 @@ echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⢹⣿⣿⣆⠀⠀⠀⠈⠻⢿⣿⣿⣿⣿�
 echo -e "${VERME2}⣿⣿⣇⠀⠀⠀⠘⣿⣿⣿⣧⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Shell${FIM}:\t\t $(ps | awk '{print $4}' | sed -n 2p | tr -d '-')"
 echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  $([[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $DESKTOP_SESSION")" # Antigo: echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t [[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "No DE / Unknown" || echo "$DESKTOP_SESSION""
 echo -e "${VERME2}⣿⣿⣿⣀⣀⡀⠀⠈⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿"
-echo -e "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿${ROXO}$(curl -s "https://type.fit/api/quotes" 2>/dev/null | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1 | tr -d '"')"${FIM}
+echo -e "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿${ROXO}${MSG_//\"}${FIM}"
 exit 0
