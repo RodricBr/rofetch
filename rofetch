@@ -19,7 +19,7 @@ echo -e "\n${VERME2}⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 echo -e "⣿⣿⣿⠿⠿⠟⠛⠛⠛⠋⠉⠉⠉⠉⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
 echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿"
 echo -e "⣿⣿⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⣶⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿  ${VERME}OS${FIM}:\t\t\t $(grep "PRETTY" /etc/os-release | cut -d"=" -f2 | tr -d '"')" #$(awk -F '=' '/^NAME=/ {print $2}' /etc/os-release 2>&- | tr -d '"')"
-echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(cat /etc/default/console-setup | grep -Eo '["\x22].*["\x22]' | sed -n '4,1p' | tr -d '"'""))" # Antigo: echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term${FIM}:\t\t $(echo -ne "$TERM ($(tty))")"
+echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(grep -Eo '["\x22].*["\x22]' /etc/default/console-setup | sed -n '4,1p' | tr -d '"'""))" # Antigo: echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term${FIM}:\t\t $(echo -ne "$TERM ($(tty))")"
 echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⠘⠛⠛⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿  ${VERME}IPv4 (Local)${FIM}:\t $(wget -q --spider "https://www.google.com/"; [[ "$?" == "0" ]]&& echo -e "${LIPV4} ${VERDE}(Connected)${FIM}" || echo -e "${LIPV4} ${VERME}(Not connected)${FIM}")"
 echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿  ${VERME}Kernel${FIM}:\t\t $(uname -smr)"
 echo -e "${VERME2}⣿⣿⡇⠀⠀⠀⣶⣶⣆⠀⠀⠀⠲⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿  ${VERME}Uptime${FIM}:\t\t $(uptime -p | sed 's/up //g')" # Antigo: $(uptime | awk '{print $3" "$4"s"}' | tr -d ',')" # Antigo: echo $(uptime) | sed 's/^.\+up\ \+\([^,]*\).*/\1/g'
