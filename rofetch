@@ -29,4 +29,5 @@ echo -e "${VERME2}⣿⣿⣇⠀⠀⠀⠘⣿⣿⣿⣧⠀⠀⠀⠀⠀⠙⢿⣿⣿�
 echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  $([[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $DESKTOP_SESSION")" # Antigo: echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t [[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "No DE / Unknown" || echo "$DESKTOP_SESSION""
 echo -e "${VERME2}⣿⣿⣿⣀⣀⡀⠀⠈⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿"
 echo -e "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿${ROXO}${MSG_//\"}${FIM}"
+unset IPV4 MSG_ VERME VERME2 VERDE ROXO FIM
 exit 0
