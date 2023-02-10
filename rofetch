@@ -8,7 +8,7 @@ export LANG=C.UTF-8
 
 LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | grep -Ev "127.0.0.*" | head -n1)"
 MSG_=$(curl -s "https://type.fit/api/quotes" 2>/dev/null | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1)
-AAA_=$(grep -Eo '["\x22].*["\x22]' -m1 /etc/lsb-release);
+#AAA_=$(grep -Eo '["\x22].*["\x22]' -m1 /etc/lsb-release);
 
 VERME="\033[1;31m"
 VERME2="\033[0;31m"
@@ -20,17 +20,17 @@ FIM="\033[0;00m"
 echo -e "\n${VERME2}#########################"
 echo -e "######""""'''\`    ⠀⠀⠀⠀'######  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
 echo -e "${VERME2}##T⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀#####"
-echo -e "##⠀⠀⠀⠀#####L.⠀⠀⠀⠀⠀⠀⠀'####  ${VERME}OS${FIM}:\t\t\t ${AAA_//\"}" # Antigo: $(grep "PRETTY" /etc/os-release | cut -d"=" -f2 | tr -d '"')" #$(awk -F '=' '/^NAME=/ {print $2}' /etc/os-release 2>&- | tr -d '"')" OR lsb_release -ds (but it's slower somehow)
+echo -e "##⠀⠀⠀⠀#####L.⠀⠀⠀⠀⠀⠀⠀'####  ${VERME}OS${FIM}:\t\t\t $(grep "PRETTY" /etc/os-release | cut -d"=" -f2 | tr -d '"')" #${AAA_//\"}" # Antigo: #$(awk -F '=' '/^NAME=/ {print $2}' /etc/os-release 2>&- | tr -d '"')" OR lsb_release -ds (but it's slower somehow)
 echo -e "${VERME2}##⠀⠀⠀⠀#######⠀⠀⠀⠀⠀⠀⠀⠀'###  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(grep -Eo '["\x22].*["\x22]' /etc/default/console-setup | sed -n '4,1p' | tr -d '"'""))" # Antigo: echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term${FIM}:\t\t $(echo -ne "$TERM ($(tty))")"
 echo -e "${VERME2}##.⠀⠀⠀'#####'⠀⠀⠀⠀⠀⠀⠀⠀⠀###  ${VERME}IPv4 (Local)${FIM}:\t $(wget -q --spider "https://www.google.com/"; [[ "$?" == "0" ]]&& echo -e "${LIPV4} ${VERDE}(Connected)${FIM}" || echo -e "${LIPV4} ${VERME}(Not connected)${FIM}")"
 echo -e "${VERME2}##L⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀_.###  ${VERME}Kernel${FIM}:\t\t $(uname -smr)"
 echo -e "${VERME2}###⠀⠀⠀##L⠀⠀⠀.############  ${VERME}Uptime${FIM}:\t\t $(uptime -p | sed 's/up //g')" # Antigo: $(uptime | awk '{print $3" "$4"s"}' | tr -d ',')" # Antigo: echo $(uptime) | sed 's/^.\+up\ \+\([^,]*\).*/\1/g'
 echo -e "${VERME2}###⠀⠀⠀'##L⠀⠀⠀'###########  $(free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }')"
 echo -e "${VERME2}###⠀⠀⠀'###L⠀⠀⠀⠀⠀#########  ${VERME}Shell${FIM}:\t\t $(VERR_=$($SHELL --version); echo ${VERR_%%(*})" # OLD: $(ps | awk '{print $4}' | sed -n 2p | tr -d '-') ${BASH_VERSION%(*}"
-echo -e "${VERME2}###⠀⠀⠀⠀####L.⠀⠀⠀⠀'#######  $([[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $DESKTOP_SESSION")" # Antigo: echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t [[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "No DE / Unknown" || echo "$DESKTOP_SESSION""
+echo -e "${VERME2}###⠀⠀⠀⠀####L.⠀⠀⠀⠀'#######  $([[ -z "$XDG_CURRENT_DESKTOP" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $XDG_CURRENT_DESKTOP $DESKTOP_SESSION")" # Antigo: echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t [[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "No DE / Unknown" || echo "$DESKTOP_SESSION""
 echo -e "${VERME2}###L__⠀'####L.⠀⠀⠀⠀⠀'#####"
 echo -e "#########################${ROXO}${MSG_//\"}${FIM}"
-unset IPV4 MSG_ VERME VERME2 VERDE ROXO FIM VERR_ AAA_
+unset IPV4 MSG_ VERME VERME2 VERDE ROXO FIM VERR_ #AAA_
 exit 0
 
 "FIM" <<EOF
