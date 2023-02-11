@@ -48,7 +48,7 @@ echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(VERR_=$($SHELL --versi
 echo -e "${VERME2}${lines[10]}  $([[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $DESKTOP_SESSION")" # Antigo: echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t [[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "No DE / Unknown" || echo "$DESKTOP_SESSION""
 echo -e "${VERME2}${lines[11]}"
 echo -e "${lines[12]}${ROXO}${MSG_//\"}${FIM}"
-unset IPV4 MSG_ VERME VERME2 VERDE ROXO FIM VERR_ AAA_
+unset IPV4 MSG_ VERME VERME2 VERDE ROXO FIM VERR_ AAA_ ARQ_
 exit 0
 
 "FIM" <<EOF
