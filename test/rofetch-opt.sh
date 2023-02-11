@@ -27,11 +27,7 @@ case "$ARQ_" in
 esac
 
 #BANNER_="r.txt"
-if [[ -z "$ARQ_" ]]; then
-  echo "Nenhum banner selecionado"
-else
-  ARQ_="r.txt";
-fi
+#[[ -z "$ARQ_" ]]&& echo "Nenhum banner selecionado" || ARQ_="r.txt";
 
 IFS=$'\n' read -d '' -r -a lines < "$ARQ_" #r.txt
 #echo "${lines[1]}"
