@@ -29,4 +29,8 @@ rofetch
 $ rofetch -b banner.txt
 ```
 
+<p align="center">
+  <img border="0" src="./image/banner-example.png" alt="roFetch banner" title="Banner!">
+</p>
+
 > If banner not specified, "**r.txt**", which is the default banner, will be set as default.
