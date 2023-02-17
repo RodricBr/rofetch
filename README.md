@@ -22,3 +22,10 @@ cd rofetch/;chmod +x rofetch
 sudo mv rofetch /usr/local/bin/
 rofetch
 ```
+
+## Set custom ascii banner: <br>
+
+```console
+$ rofetch -b banner.txt
+```
+
