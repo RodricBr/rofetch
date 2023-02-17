@@ -29,4 +29,4 @@ rofetch
 $ rofetch -b banner.txt
 ```
 
-> If banner not especified, "**r.txt**", which is the default banner, will be set as default.
+> If banner not specified, "**r.txt**", which is the default banner, will be set as default.
