@@ -51,7 +51,7 @@ echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t\t $(uname -smr)"
 echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t\t $(uptime -p | sed 's/up //g')" # Antigo: $(uptime | awk '{print $3" "$4"s"}' | tr -d ',')" # Antigo: echo $(uptime) | sed 's/^.\+up\ \+\([^,]*\).*/\1/g'
 echo -e "${VERME2}${lines[8]}  $(free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t\t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }')"
 echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t\t $(VERR_=$($SHELL --version); echo ${VERR_%%(*})" # OLD: $(ps | awk '{print $4}' | sed -n 2p | tr -d '-') ${BASH_VERSION%(*}"
-echo -e "${VERME2}${lines[10]}  $([[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $DESKTOP_SESSION")" # Antigo: echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t [[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "No DE / Unknown" || echo "$DESKTOP_SESSION""
+echo -e "${VERME2}${lines[10]}  $([[ "$DESKTOP_SESSION" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $DESKTOP_SESSION")" # Antigo: echo -e "${VERME2}⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿  ${VERME}DE${FIM}:\t\t\t [[ "$(echo $DESKTOP_SESSION)" == "" ]]&& echo -e "No DE / Unknown" || echo "$DESKTOP_SESSION""
 echo -e "${VERME2}${lines[11]}"
 echo -e "${lines[12]}${ROXO}${MSG_//\"}${FIM}"
 unset IPV4 MSG_ VERME VERME2 VERDE ROXO FIM VERR_ #AAA_
