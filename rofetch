@@ -17,13 +17,23 @@ ROXO="\033[1;95m"
 FIM="\033[0;00m"
 
 # #################################################### #
+# tem que ser no case, mas ta bugando alguma coisa e n to afim de debugar agora
+function HELP_(){
+  echo -e "\nUsage: ${0##*/} OPTIONS\n\n\
+  Flags:\n\
+    -h | --help          :: Shows this help message.\n\
+    -b | --banner string :: Set custom ascii banner.\n"
+  exit 0
+}
+[[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]&& HELP_
+
 # Ideia:
 # ./rofetch2 --banner r.txt
 
 ARQ_="$2"
 case "$ARQ_" in
   "-b"|"--banner") : ;;
-  "") echo "Argumento faltando, arquivo \"r.txt\" setador por default"; ARQ_="r.txt" ;;
+  "") echo "File \"r.txt\" set as default"; ARQ_="r.txt" ;;
 esac
 
 IFS=$'\n' read -d '' -r -a lines < "$ARQ_" #r.txt
