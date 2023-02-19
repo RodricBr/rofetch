@@ -33,5 +33,6 @@ $ rofetch -b banner.txt
   <img border="0" src="./image/banner.png" alt="roFetch banner" title="Banner!">
 </p>
 
-> If banner not specified, "**r.txt**", which is the default banner, will be set as default.
-> It is also recommended for the ASCII banner to have about 13 to 15 lines.
+> If banner not specified, "**r.txt**", which is the default banner, will be set as default. <br>
+> It is also recommended for the ASCII banner to have about 13 to 15 lines, and to add some <br>
+> additional spaces to correctly align the informations given by the program.
