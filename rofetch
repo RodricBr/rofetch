@@ -9,7 +9,7 @@ export LANG=C.UTF-8
 LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | grep -Ev "127.0.0.*" | head -n1)"
 MSG_=$(curl -s "https://type.fit/api/quotes" 2>/dev/null | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1)
 #AAA_=$(grep -Eo '["\x22].*["\x22]' -m1 /etc/lsb-release);
-CHECK_VM_=$([[ $(grep -e "Windows" <<< $(lscpu)) ]]&& echo -e "WSL"; [[ $(grep -e "KVM" <<< $(lscpu)) ]]&& echo -e "Virtual Box")
+CHECK_VM_=$([[ $(lscpu | grep -e "Windows") ]]&& echo -e "WSL"; [[ $(lscpu | grep -e "KVM") ]]&& echo -e "Virtual Box") # Slower: $([[ $(grep -e "Windows" <<< $(lscpu)) ]]&& echo -e "WSL"; [[ $(grep -e "KVM" <<< $(lscpu)) ]]&& echo -e "Virtual Box")
 
 VERME="\033[1;31m"
 VERME2="\033[0;31m"
