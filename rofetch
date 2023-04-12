@@ -19,7 +19,7 @@ FIM="\033[0;00m"
 
 # #################################################### #
 # tem que ser no case, mas ta bugando alguma coisa e n to afim de debugar agora
-function HELP_(){
+function HELP_ {
   echo -e "\nUsage: ${0##*/} OPTIONS\n\n\
   Flags:\n\
     -h | --help          :: Shows this help message.\n\
