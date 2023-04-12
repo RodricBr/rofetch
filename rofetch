@@ -9,6 +9,7 @@ export LANG=C.UTF-8
 LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | grep -Ev "127.0.0.*" | head -n1)"
 MSG_=$(curl -s "https://type.fit/api/quotes" 2>/dev/null | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1)
 #AAA_=$(grep -Eo '["\x22].*["\x22]' -m1 /etc/lsb-release);
+CHECK_VM_=$([[ $(grep -e "Windows" <<< $(lscpu)) ]]&& echo -e "WSL"; [[ $(grep -e "KVM" <<< $(lscpu)) ]]&& echo -e "Virtual Box")
 
 VERME="\033[1;31m"
 VERME2="\033[0;31m"
@@ -44,7 +45,7 @@ IFS=$'\n' read -d '' -r -a lines < "$ARQ_" #r.txt
 echo -e "\n${VERME2}${lines[0]}"
 echo -e "${lines[1]}  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
 echo -e "${VERME2}${lines[2]}"
-echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(grep "PRETTY" /etc/os-release | cut -d"=" -f2 | tr -d '"')" #$(awk -F '=' '/^NAME=/ {print $2}' /etc/os-release 2>&- | tr -d '"')" OR lsb_release -ds (but it's slower somehow)
+echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(grep "PRETTY" /etc/os-release | cut -d"=" -f2 | tr -d '"') ($CHECK_VM_)" #$(awk -F '=' '/^NAME=/ {print $2}' /etc/os-release 2>&- | tr -d '"')" OR lsb_release -ds (but it's slower somehow)
 echo -e "${VERME2}${lines[4]}  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(grep -Eo '["\x22].*["\x22]' /etc/default/console-setup | sed -n '4,1p' | tr -d '"'""))" # Antigo: echo -e "${VERME2}⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿  ${VERME}Term${FIM}:\t\t $(echo -ne "$TERM ($(tty))")"
 echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(wget -q --spider "https://www.google.com/"; [[ "$?" == "0" ]]&& echo -e "${LIPV4} ${VERDE}(Connected)${FIM}" || echo -e "${LIPV4} ${VERME}(Not connected)${FIM}")"
 echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(uname -smr)"
