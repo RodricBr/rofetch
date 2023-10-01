@@ -35,4 +35,4 @@ $ rofetch -b banner.txt
 
 > If banner not specified, "**r.txt**", which is the default banner, will be set as default. <br>
 > It is also recommended for the ASCII banner to have about 13 (the rest will be cut off), and to add some <br>
-> additional spaces/tabs to correctly align the informations given by the program (inside vim, use **:set list** to view invisible characters).
+> additional spaces/tabs to correctly align the informations given by the program (inside vim, for example, use **:set list** to view invisible characters).
