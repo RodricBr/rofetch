@@ -45,7 +45,7 @@ case "$ARQ_" in
   "") echo "File \"r.txt\" set as default"; ARQ_="r.txt" ;;
 esac
 
-IFS=$'\n' read -d '' -r -a lines < "$ARQ_" #r.txt
+IFS=$'\n' read -d '' -r -a lines < "$ARQ_"
 
 # Main
 
@@ -56,9 +56,9 @@ echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(tr -d '"' <<< $(grep -Eo '["\x22
 echo -e "${VERME2}${lines[4]}  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(grep -Eo '["\x22].*["\x22]' /etc/default/console-setup | sed -n '4,1p' | tr -d '"'""))"
 echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t\t $(wget -q --spider "https://www.google.com/"; [[ "$?" == "0" ]]&& echo -e "${LIPV4} ${VERDE}(Connected)${FIM}" || echo -e "${LIPV4} ${VERME}(Not connected)${FIM}")"
 echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t\t $(uname -smr)"
-echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t\t $(uptime -p | sed 's/up //g')" # Antigo: $(uptime | awk '{print $3" "$4"s"}' | tr -d ',')"
+echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t\t $(uptime -p | sed 's/up //g')"
 echo -e "${VERME2}${lines[8]}  $(free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }')"
-echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t\t $(VERR_=$($SHELL --version); echo ${VERR_%%(*})" # OLD: $(ps | awk '{print $4}' | sed -n 2p | tr -d '-') ${BASH_VERSION%(*}"
+echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t\t $(VERR_=$($SHELL --version); echo ${VERR_%%(*})"
 echo -e "${VERME2}${lines[10]}  $([[ "$DESKTOP_SESSION" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $XDG_CURRENT_DESKTOP $DESKTOP_SESSION")"
 echo -e "${VERME2}${lines[11]}"
 echo -e "${lines[12]}${ROXO}${MSG_//\"}${FIM}"
