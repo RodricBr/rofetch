@@ -22,26 +22,37 @@ function HELP_ {
   echo -e "\nUsage: ${0##*/} OPTIONS\n\n\
   Flags:\n\
     -h | --help          :: Shows this help message.\n\
-    -b | --banner string :: Set custom ascii banner.\n"
+    -b | --banner string :: Set custom ascii banner.\n\
+    -d | --debug         :: Runs the program with bash's debug mode.\n\
+                            Debug flag must be the last.\n\
+                            Usage: ./program.sh -b banner.png -d\n"
   exit 0
 }
 
 function VERSION_ {
   echo -e "\nVersion: 2.1\n\
   Updated IPv4 grepping, typos, term output, fixed errors found\n\
-  within other systems and cleaned the code a little bit."
+  within other systems and cleaned the code a little bit.\n\
+  \nVersion: 2.2\n\
+  Added bash's debug mode just for fun."
   exit 0
+}
+
+function DEBUG_ {
+  echo -e "\n${VERME2}Modo debug está ativado.${FIM}\n"
+  set -x
 }
 
 [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]&& HELP_
 [[ "$1" == "-v" ]] || [[ "$1" == "--version" ]] && VERSION_
+[[ "${@: -1}" == "-d" ]] || [[ "${@: -1}" == "--debug" ]]&& DEBUG_
 
 # Reading the file for the banner
 
 ARQ_="$2"
 case "$ARQ_" in
   "-b"|"--banner") : ;;
-  "") echo "File \"r.txt\" set as default"; ARQ_="r.txt" ;;
+  "") [[ -f "r.txt" ]]&& printf "File \"r.txt\" set as default\n" && ARQ_="r.txt" || printf "${VERME2}Default banner file was not found!${FIM}\n" ;;
 esac
 
 IFS=$'\n' read -d '' -r -a lines < "$ARQ_"
