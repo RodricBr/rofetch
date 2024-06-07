@@ -34,6 +34,6 @@ $ rofetch -b banner.txt
   <img border="0" src="./image/banner.png" alt="roFetch banner" title="Banner!">
 </p>
 
-> If banner not specified, "**r.txt**", which is the default banner, will be set as default. And if no banned is specified then no banner will be applied. <br>
+> If banner not specified, "**r.txt**", which is the default banner, will be set as default. <br>
 > It is also recommended for the ASCII banner to have about 13 (the rest will be cut off), and to add some <br>
 > additional spaces/tabs to correctly align the informations given by the program (inside vim, for example, use **:set list** to view invisible characters).
