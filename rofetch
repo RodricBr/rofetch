@@ -4,9 +4,8 @@
 
 export LANG=C.UTF-8
 
-LIPV4="$(ip a | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" | grep -Ev "127.0.0.*" | head -n1)"
 MSG_=$(curl -s "https://type.fit/api/quotes" 2>/dev/null | jq '.[] | [.text]' | grep -e '"' | sort -R | head -n1)
-CHECK_VM_=$([[ $(lscpu | grep -e "Windows") ]]&& echo -e "WSL"; [[ $(lscpu | grep -e "KVM") ]]&& echo -e "Virtual Box")
+CHECK_VM_=$(X_=$(systemd-detect-virt); echo ${X_^})
 
 # Color variables
 
@@ -64,7 +63,7 @@ echo -e "${lines[1]}  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
 echo -e "${VERME2}${lines[2]}"
 echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(grep -Eo '["\x22].*["\x22]' <<< $(grep -e "DESCRIPTION" /etc/lsb-release) | tr -d '"') ($CHECK_VM_)"
 echo -e "${VERME2}${lines[4]}  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(grep -Eo '["\x22].*["\x22]' /etc/default/console-setup | sed -n '4,1p' | tr -d '"'""))"
-echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(wget -q --spider "https://www.google.com/"; [[ "$?" == "0" ]]&& echo -e "${LIPV4} ${VERDE}(Connected)${FIM}" || echo -e "${LIPV4} ${VERME}(Not connected)${FIM}")"
+echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $([[ ! "$(ping -c 1 comptia.org | grep -Po "\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}" -m 1)" ]]&& echo -e "${VERME}(Disconnected)${FIM}" || echo -e "$(hostname -I)${VERDE}(Connected)${FIM}")")"
 echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(uname -smr)"
 echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t $(uptime -p | sed 's/up //g')"
 echo -e "${VERME2}${lines[8]}  $(free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }')"
@@ -72,7 +71,7 @@ echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(VERR_=$($SHELL --versi
 echo -e "${VERME2}${lines[10]}  $([[ "$DESKTOP_SESSION" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $XDG_CURRENT_DESKTOP $DESKTOP_SESSION")"
 echo -e "${VERME2}${lines[11]}"
 echo -e "${lines[12]}${ROXO}${MSG_//\"}${FIM}"
-unset IPV4 MSG_ VERME VERME2 VERDE ROXO FIM VERR_ CHECK_VM_
+unset MSG_ VERME VERME2 VERDE ROXO FIM CHECK_VM_
 exit 0
 
 # Default "R" banner
