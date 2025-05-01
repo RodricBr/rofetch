@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+
+# Color variables
+VERME="\033[1;31m"
+VERME2="\033[0;31m"
+VERDE="\033[1;32m"
+ROXO="\033[1;95m"
+FIM="\033[0;00m"
+
+
+# Checking if debug option is set:
+if [[ "${@: -1}" == "-d" ]] || [[ "${@: -1}" == "--debug" ]]; then
+  DEBUG_=true
+  set -x
+else
+  DEBUG_=false
+fi
+
+# Reading banner file from second argument
+ARQ_="$2"
+
+
+# Option flag functions:
+# Help message (-h/--help)
+function HELP_ {
+  echo -e "\nUsage: ${0##*/} [OPTION]\n\n\
+  Arguments:\n\
+    -h | --help          :: Shows this help message.\n\
+    -b | --banner string :: Set custom ascii banner.\n\
+    -d | --debug         :: Runs the program with bash's debug mode.\n\
+                            Debug flag MUST be the last argument!\n\
+                            Example: ./program.sh -b ascii.txt -d\n"
+  exit 0
+}
+
+# Version message (-v/--version)
+function VERSION_ {
+  echo -e "\nVersion: 3.0\n\
+  Added more compability to Debian & UNIX based distros.\n\
+  Rewrote the whole code and made it more legible.\n\
+  "
+  exit 0
+}
+
+
+# Other variables:
+export LANG=C.UTF-8
+MSG_=$(
+curl -s "https://dummyjson.com/quotes" | jq -r '
+  .quotes as $q |
+  ($q | length) as $len |
+  $q[(now | tonumber * 1000 | floor % $len)] |
+  "\(.quote) — \(.author)"
+'
+)
+CHECK_VM_=$(X_=$(systemd-detect-virt); echo ${X_^})
+
+
+# Main Functions:
+# Checks if user is running on a standardize system or not
+function OS_DETECT_FUNC {
+  if [[ ! -f "/etc/lsb-release" ]]; then
+    grep "PRETTY_" /etc/os-release | cut -d "=" -f2 | tr -d '"'
+  else
+    grep -e "DESCRIPTION" /etc/lsb-release | cut -d "=" -f2 | tr -d '"'
+  fi
+}
+
+# Getting font name
+function FONT_FUNC {
+  grep "FONTFACE" /etc/default/console-setup | cut -d "=" -f2 | tr -d '"'
+}
+
+# Getting local ipv4 address
+function IPV4_FUNC {
+  if ! ping -W 2 -c 1 8.8.8.8 &>/dev/null; then
+    echo -e "$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1) ${VERME}(Disconnected)${FIM}"
+  else
+    echo -e "$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1) ${VERDE}(Connected)${FIM}"
+  fi
+}
+
+# Getting kernel information
+function KERNEL_FUNC {
+  uname -smr
+}
+
+# Getting up time
+function UPTIME_FUNC {
+  echo "$(awk '{print int($1/3600)" hours "int(($1%3600)/60)" minutes"}' /proc/uptime)"
+}
+
+# Getting user's memory usage information
+function MEMUSE_FUNC {
+  free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }'
+}
+
+
+# Banner functionality:
+# If banner flag is set by the user, read banner file and store into an array
+function READ_BANNER_FUNC {
+  lines=()
+  while IFS= read -r line; do
+    lines+=("$line")
+  done < "$1"
+}
+
+# Checking if the banner flag is set
+if [[ "$1" == "-b" || "$1" == "--banner" ]]; then
+  # if a custom banner file is passed...
+  if [[ -f "$ARQ_" ]]; then
+    READ_BANNER_FUNC "$ARQ_"
+  else
+    if [[ -f "$ARQ_" ]]; then
+      echo -e "${VERME2}[Error]: Banner file '$ARQ_' was not found!${FIM}\nQuitting..."
+      exit 1
+    else
+      echo -e "${VERME2}[Error]: Banner option requires an existing file as argument!${FIM}\nQuitting..."
+    fi
+  fi
+else
+  # if not banner flag is set, this shall be the default ascii art:
+  lines=(
+    "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
+    "⣿⣿⣿⠿⠿⠟⠛⠛⠛⠋⠉⠉⠉⠉⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿"
+    "⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿"
+    "⣿⣿⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⣶⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿"
+    "⣿⣿⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿"
+    "⣿⣿⡇⠀⠀⠀⠘⠛⠛⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿"
+    "⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿"
+    "⣿⣿⡇⠀⠀⠀⣶⣶⣆⠀⠀⠀⠲⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
+    "⣿⣿⡇⠀⠀⠀⢹⣿⣿⣆⠀⠀⠀⠈⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
+    "⣿⣿⣇⠀⠀⠀⠘⣿⣿⣿⣧⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿"
+    "⣿⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿"
+    "⣿⣿⣿⣀⣀⡀⠀⠈⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿"
+    "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
+  )
+fi
+
+# Debug mode will look for each line of the banner file too
+if $DEBUG_; then
+  for line in "${lines[@]}"; do
+    echo "$line"
+  done
+fi
+
+
+# Main structure:
+echo -e "\n${VERME2}${lines[0]}"
+echo -e "${lines[1]}  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
+echo -e "${VERME2}${lines[2]}"
+echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(OS_DETECT_FUNC) ($CHECK_VM_)"
+echo -e "${VERME2}${lines[4]}  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(FONT_FUNC))"
+echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(IPV4_FUNC)"
+echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(KERNEL_FUNC)"
+echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
+echo -e "${VERME2}${lines[8]}  $(MEMUSE_FUNC)"
+echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(VERR_=$($SHELL --version); echo ${VERR_%%(*})"
+echo -e "${VERME2}${lines[10]}  $([[ "$DESKTOP_SESSION" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $XDG_CURRENT_DESKTOP $DESKTOP_SESSION")"
+echo -e "${VERME2}${lines[11]}"
+echo -e "${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
+
+unset MSG_ VERME VERME2 VERDE ROXO FIM CHECK_VM_
+exit 0
