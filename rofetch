@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # Color variables
 VERME="\033[1;31m"
 VERME2="\033[0;31m"
@@ -23,61 +24,86 @@ ARQ_="$2"
 # Option flag functions:
 # Help message (-h/--help)
 function HELP_ {
-  echo -e "\nUsage: ${0##*/} [OPTION]\n\n\
-  Arguments:\n\
-    -h | --help          :: Shows this help message.\n\
-    -b | --banner string :: Set custom ascii banner.\n\
-    -d | --debug         :: Runs the program with bash's debug mode.\n\
-                            Debug flag MUST be the last argument!\n\
-                            Example: ./program.sh -b ascii.txt -d\n"
+  echo -e "\nUsage: ${0##*/} [OPTION] [-d]\n\n\
+  Options:\n\
+    -h | --help                  :: Shows this help message.\n\
+    -b | --banner /path/to/file  :: Set custom ASCII art banner. Must be no more than 14 lines.\n\
+    -d | --debug                 :: Runs the program with bash's debug mode.\n\
+                                    Debug flag MUST be the last argument!\n\
+                                    Example: ./rofetch -b ascii.txt -d\n\
+  Description:\n\
+  Rofetch is a command line interface system information tool inspired by neofetch\n\
+  written fully in bash script. Its main purpose is to be fast, reliable and clean.\n\
+  Rofetch displays information next to a default \"R\" ASCII art but the art can also\n\
+  be modified by a file containing your ASCII art of choice using the \"-b/--banner\" option.\n\
+  The file needs to have no more than 14 lines otherwise it'll be cut off.\n\
+
+
+  Improvements ideas and bug reports are welcome and can be solicited at:\n\
+  https://github.com/dylanaraps/neofetch/issues\n\
+  "
   exit 0
 }
 
 # Version message (-v/--version)
 function VERSION_ {
-  echo -e "\nVersion: 3.0\n\
-  Added more compability to Debian & UNIX based distros.\n\
-  Rewrote the whole code and made it more legible.\n\
+  echo -e "\nVersion: 3.1\n\
+  + Added more compability for Debian based distros & UNIX/POSIX systems.\n\
+  + Detect VM and DE/WM are more dynamic.\n\
+  + \"r.txt\" file with default banner is no longer needed.\n\
+  Rofetch can now be executed in any location of your system.\n\
+  + Rewrote the whole code and made it more legible for programmers.\n\
+  - Inspiration quotes variable was commented out and will be a WIP for now\n\
+  since it's been consuming a little bit too much of user execution time.\n\
   "
   exit 0
 }
 
 
+# Calling the help or version function if flags are being called
+[[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]&& HELP_
+[[ "$1" == "-v" ]] || [[ "$1" == "--version" ]] && VERSION_
+
+
 # Other variables:
 export LANG=C.UTF-8
-MSG_=$(
-curl -s "https://dummyjson.com/quotes" | jq -r '
-  .quotes as $q |
-  ($q | length) as $len |
-  $q[(now | tonumber * 1000 | floor % $len)] |
-  "\(.quote) — \(.author)"
-'
-)
-CHECK_VM_=$(X_=$(systemd-detect-virt); echo ${X_^})
+# Quotes (previous quotes api is no longer available)
+#MSG_=$(
+#curl -s "https://dummyjson.com/quotes" | jq -r '
+#  .quotes as $q |
+#  ($q | length) as $len |
+#  $q[(now | tonumber * 1000 | floor % $len)] |
+#  "\(.quote) — \(.author)"
+#'
+#)
+#CHECK_VM_=$(X_=$(systemd-detect-virt); echo ${X_^})
 
 
 # Main Functions:
 # Checks if user is running on a standardize system or not
 function OS_DETECT_FUNC {
   if [[ ! -f "/etc/lsb-release" ]]; then
-    grep "PRETTY_" /etc/os-release | cut -d "=" -f2 | tr -d '"'
+    # slower: grep "PRETTY_" /etc/os-release | cut -d "=" -f2 | tr -d '"'
+    awk -F= '/^PRETTY_NAME=/ { gsub(/"/, "", $2); print $2 }' /etc/os-release
   else
-    grep -e "DESCRIPTION" /etc/lsb-release | cut -d "=" -f2 | tr -d '"'
+    # slower: grep -e "DESCRIPTION" /etc/lsb-release | cut -d "=" -f2 | tr -d '"'
+    awk -F= '/DESCRIPTION/ { gsub(/"/, "", $2); print $2 }' /etc/lsb-release
   fi
 }
 
 # Getting font name
 function FONT_FUNC {
-  grep "FONTFACE" /etc/default/console-setup | cut -d "=" -f2 | tr -d '"'
+  # slower: echo -ne "$TERM ($(tty))) / ($(grep "FONTFACE" /etc/default/console-setup | cut -d "=" -f2 | tr -d '"'))"
+  echo -ne "$TERM ($(tty)) / ($(awk -F= '/^FONTFACE=/ { gsub(/"/, "", $2); print $2 }' /etc/default/console-setup))"
 }
 
-# Getting local ipv4 address
+# Getting local ipv4 address and checking if the user has access to the internet
 function IPV4_FUNC {
   local IP_CMD=$(ip route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
   if ! ping -W 2 -c 1 8.8.8.8 &>/dev/null; then
-    echo -e "$IP_CMD ${VERME}(Disconnected)${FIM}"
+    printf "$IP_CMD ${VERME}(Disconnected)${FIM}"
   else
-    echo -e "$IP_CMD ${VERDE}(Connected)${FIM}"
+    printf "$IP_CMD ${VERDE}(Connected)${FIM}"
   fi
 }
 
@@ -98,7 +124,6 @@ function MEMUSE_FUNC {
 
 # Getting shell name and version
 function SHELL_FUNC {
-
   VERR_=$($SHELL --version); echo ${VERR_%%(*}
 
   # Matches only before the "("
@@ -106,19 +131,87 @@ function SHELL_FUNC {
 }
 
 # Getting DE Name
-function DE_FUNC {
+function CHECK_VM {
+  # Trying /sys/class/dmi/id if available
+  if [[ -r /sys/class/dmi/id/sys_vendor && -r /sys/class/dmi/id/product_name ]]; then
+    vendor=$(< /sys/class/dmi/id/sys_vendor)
+    product=$(< /sys/class/dmi/id/product_name)
 
- ps -e | grep -Eo 'gnome|kde|xfce4|lxde|lxqt|cinnamon|mate|pantheon|budgie|deepin' -m 1
+    if [[ "$vendor" == "innotek GmbH" && "$product" == "VirtualBox" ]]; then
+      version=""
+      if [[ -r /sys/class/dmi/id/product_version ]]; then
+        version=$(< /sys/class/dmi/id/product_version)
+      fi
+      printf "VirtualBox $version"
+      return
+    fi
 
+    case "$vendor" in
+      "Microsoft Corporation") [[ "$product" == "Virtual Machine" ]] && printf "Hyper-V" && return ;;
+      "VMware, Inc.") printf "VMware" && return ;;
+      "QEMU") printf "QEMU/KVM" && return ;;
+    esac
+  fi
+
+  # Checking if the user is running on WSL1/2
+  if grep -qi microsoft /proc/version 2>/dev/null; then
+    if grep -qEi 'wsl.*2' /proc/version; then
+      printf "WSL2"
+    else
+      printf "WSL1"
+    fi
+    return
+  fi
+
+  # Fallback: systemd-detect-virt
+  if command -v systemd-detect-virt &> /dev/null; then
+    virt_type=$(systemd-detect-virt)
+    if [[ "$virt_type" != "none" ]]; then
+      printf "$virt_type"
+      return
+    fi
+  fi
+
+  printf "Unknown"
 }
 
-# Getting WM name:
-function WM_FUNC {
 
-  ps -e | grep -Eo 'kwin|mutter|xfwm4|openbox|i3|compiz|xmonad|awesome|fluxbox|windowmaker' -m 1
+function DE_WM_FUNC {
+  local DE_ WM_
 
+  # Detect DE using environment variables
+  if [[ "$XDG_CURRENT_DESKTOP" ]]; then
+    DE_="$XDG_CURRENT_DESKTOP"
+  elif [[ "$DESKTOP_SESSION" ]]; then
+    DE_="$DESKTOP_SESSION"
+  elif [[ "$GNOME_DESKTOP_SESSION_ID" ]]; then
+    DE_="GNOME"
+  elif [[ "$KDE_FULL_SESSION" == "true" ]]; then
+    DE_="KDE"
+  else
+    DE_="Unknown DE"
+  fi
+
+    # Detect WM using running processes
+    # Use pgrep for common WMs, ordered by likelihood
+  local WM_LIST=(
+    "mutter" "kwin" "xfwm4" "openbox" "i3" "bspwm" "awesome"
+    "xmonad" "marco" "fluxbox" "icewm" "enlightenment" "compiz" "herbstluftwm"
+    )
+
+  for candidate in "${WM_LIST[@]}"; do
+    if pgrep -x "$candidate" > /dev/null; then
+      WM_="$candidate"
+      break
+    fi
+  done
+
+  if [[ -z "$WM_" ]]; then
+    WM_="Unknown WM"
+  fi
+
+  echo "$DE_ / $WM_"
 }
-
 
 # Banner functionality:
 # If banner flag is set by the user, read banner file and store into an array
@@ -131,19 +224,20 @@ function READ_BANNER_FUNC {
 
 # Checking if the banner flag is set
 if [[ "$1" == "-b" || "$1" == "--banner" ]]; then
-  # if a custom banner file is passed...
+  # if a custom banner file is defined...
   if [[ -f "$ARQ_" ]]; then
     READ_BANNER_FUNC "$ARQ_"
   else
     if [[ -f "$ARQ_" ]]; then
-      echo -e "${VERME2}[Error]: Banner file '$ARQ_' was not found!${FIM}\nQuitting..."
+      printf "${VERME2}[Error]:${FIM} Banner file \"$ARQ_\" was not found!\nQuitting...\n"
       exit 1
     else
-      echo -e "${VERME2}[Error]: Banner option requires an existing file as argument!${FIM}\nQuitting..."
+      printf "${VERME2}[Error]:${FIM} Banner option requires an existing file as argument!\nQuitting...\n"
+      exit 1
     fi
   fi
 else
-  # if not banner flag is set, this shall be the default ascii art:
+  # If no banner flag is set, this shall be the default ascii art:
   lines=(
     "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
     "⣿⣿⣿⠿⠿⠟⠛⠛⠛⠋⠉⠉⠉⠉⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿"
@@ -164,7 +258,7 @@ fi
 # Debug mode will look for each line of the banner file too
 if $DEBUG_; then
   for line in "${lines[@]}"; do
-    echo "$line"
+    printf "$line"
   done
 fi
 
@@ -173,16 +267,17 @@ fi
 echo -e "\n${VERME2}${lines[0]}"
 echo -e "${lines[1]}  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
 echo -e "${VERME2}${lines[2]}"
-echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(OS_DETECT_FUNC) ($CHECK_VM_)"
-echo -e "${VERME2}${lines[4]}  ${VERME}Term & Font${FIM}:\t\t $(echo -ne "$TERM ($(tty))") / ($(FONT_FUNC))"
+echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(OS_DETECT_FUNC) ($(CHECK_VM))"
+echo -e "${VERME2}${lines[4]}  ${VERME}Terminal & Font${FIM}:\t $(FONT_FUNC)"
 echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(IPV4_FUNC)"
 echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(KERNEL_FUNC)"
 echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
 echo -e "${VERME2}${lines[8]}  $(MEMUSE_FUNC)"
 echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(SHELL_FUNC)"
-echo -e "${VERME2}${lines[10]}  ${VERME}DE & WM${FIM}:\t\t $(DE_FUNC) / $(WM_FUNC)"
+echo -e "${VERME2}${lines[10]}  ${VERME}DE & WM${FIM}:\t\t $(DE_WM_FUNC)"
 echo -e "${VERME2}${lines[11]}${FIM}"
 echo -e "${VERME2}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
+echo -e "${VERME2}${lines[13]}${FIM}"
 
 unset MSG_ VERME VERME2 VERDE ROXO FIM CHECK_VM_
 exit 0
