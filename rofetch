@@ -27,7 +27,7 @@ function HELP_ {
   echo -e "\nUsage: ${0##*/} [OPTION] [-d]\n\n\
   Options:\n\
     -h | --help                  :: Shows this help message.\n\
-    -b | --banner /path/to/file  :: Set custom ASCII art banner. Must be no more than 14 lines.\n\
+    -b | --banner /path/to/file  :: Set custom ASCII art banner. Must be no more than 15 lines.\n\
     -d | --debug                 :: Runs the program with bash's debug mode.\n\
                                     Debug flag MUST be the last argument!\n\
                                     Example: ./rofetch -b ascii.txt -d\n\
@@ -36,7 +36,7 @@ function HELP_ {
   written fully in bash script. Its main purpose is to be fast, reliable and clean.\n\
   Rofetch displays information next to a default \"R\" ASCII art but the art can also\n\
   be modified by a file containing your ASCII art of choice using the \"-b/--banner\" option.\n\
-  The file needs to have no more than 14 lines otherwise it'll be cut off.\n\
+  The file needs to have no more than 15 lines otherwise it'll be cut off.\n\
 
 
   Improvements ideas and bug reports are welcome and can be solicited at:\n\
@@ -278,6 +278,7 @@ echo -e "${VERME2}${lines[10]}  ${VERME}DE & WM${FIM}:\t\t $(DE_WM_FUNC)"
 echo -e "${VERME2}${lines[11]}${FIM}"
 echo -e "${VERME2}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
 echo -e "${VERME2}${lines[13]}${FIM}"
+echo -e "${VERME2}${lines[14]}${FIM}"
 
 unset MSG_ VERME VERME2 VERDE ROXO FIM CHECK_VM_
 exit 0
