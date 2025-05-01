@@ -95,6 +95,29 @@ function MEMUSE_FUNC {
   free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }'
 }
 
+# Getting shell name and version
+function SHELL_FUNC {
+
+  VERR_=$($SHELL --version); echo ${VERR_%%(*}
+
+  # Matches only before the "("
+
+}
+
+# Getting DE Name
+function DE_FUNC {
+
+ ps -e | grep -Eo 'gnome|kde|xfce4|lxde|lxqt|cinnamon|mate|pantheon|budgie|deepin' -m 1
+
+}
+
+# Getting WM name:
+function WM_FUNC {
+
+  ps -e | grep -Eo 'kwin|mutter|xfwm4|openbox|i3|compiz|xmonad|awesome|fluxbox|windowmaker' -m 1
+
+}
+
 
 # Banner functionality:
 # If banner flag is set by the user, read banner file and store into an array
@@ -155,10 +178,10 @@ echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(IPV4_FUNC)"
 echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(KERNEL_FUNC)"
 echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
 echo -e "${VERME2}${lines[8]}  $(MEMUSE_FUNC)"
-echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(VERR_=$($SHELL --version); echo ${VERR_%%(*})"
-echo -e "${VERME2}${lines[10]}  $([[ "$DESKTOP_SESSION" == "" ]]&& echo -e "${VERME}DE${FIM}:\t\t\t No DE / Unknown" || echo -e "${VERME}DE${FIM}:\t\t\t $XDG_CURRENT_DESKTOP $DESKTOP_SESSION")"
-echo -e "${VERME2}${lines[11]}"
-echo -e "${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
+echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(SHELL_FUNC)"
+echo -e "${VERME2}${lines[10]}  ${VERME}DE & WM${FIM}:\t\t $(DE_FUNC) / $(WM_FUNC)"
+echo -e "${VERME2}${lines[11]}${FIM}"
+echo -e "${VERME2}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
 
 unset MSG_ VERME VERME2 VERDE ROXO FIM CHECK_VM_
 exit 0
