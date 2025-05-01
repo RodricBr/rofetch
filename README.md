@@ -1,7 +1,7 @@
 <h1 align="center">roFetch</h2>
 
 <p align="center">
-  <img border="0" src="./image/example.png" alt="roFetch example" title="Isn't it simply awesome?!">
+  <img border="0" src=".img/example.png" alt="roFetch example" title="Isn't it simply awesome?!">
 </p>
 
 **rofetch, is my home-made GNU/Linux system fetching program which was inspired by neofetch but with an addition of random motivational quotes for you!**
@@ -30,7 +30,7 @@ $ rofetch -b banner.txt
 ```
 
 <p align="center">
-  <img border="0" src="./image/example-2.png" alt="roFetch banner" title="Banner!">
+  <img border="0" src=".img/example-2.png" alt="roFetch banner" title="Banner!">
 </p>
 
 > It is recommended for the ASCII banner to have about 13 (the rest will be cut off), and to add some <br>
