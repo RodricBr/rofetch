@@ -73,10 +73,11 @@ function FONT_FUNC {
 
 # Getting local ipv4 address
 function IPV4_FUNC {
+  local IP_CMD=$(ip route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
   if ! ping -W 2 -c 1 8.8.8.8 &>/dev/null; then
-    echo -e "$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1) ${VERME}(Disconnected)${FIM}"
+    echo -e "$IP_CMD ${VERME}(Disconnected)${FIM}"
   else
-    echo -e "$(ip -4 -o addr show scope global | awk '{print $4}' | cut -d/ -f1) ${VERDE}(Connected)${FIM}"
+    echo -e "$IP_CMD ${VERDE}(Connected)${FIM}"
   fi
 }
 
