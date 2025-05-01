@@ -1,4 +1,4 @@
-<h1 align="center">roFetch</h2>
+<h1 align="center">rofetch</h2>
 
 <p align="center">
   <img border="0" src=".img/example.png" alt="roFetch example" title="Isn't it simply awesome?!">
