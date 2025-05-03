@@ -5,7 +5,7 @@
 </p>
 
 **rofetch, is my home-made GNU/Linux system fetching program which was inspired by neofetch but with an addition of random motivational quotes for you!**
-**rofetch is only supported and was only tested on Debian (bookworm) based distributions and Microsoft Windows Subsystem for Linux (WSL2)**
+**rofetch is only supported and was only tested on Debian (bookworm) based distributions and Microsoft Windows Subsystem for Linux (WSL2) running Ubuntu 22.04.5 LTS**
 
 <hr>
 
