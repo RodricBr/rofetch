@@ -14,7 +14,7 @@
 > [!IMPORTANT] 
 > Requirements: <br>
 
-> **net-tools, curl and jq** (sudo apt install net-tools curl jq -y) <br>
+> **net-tools, iproute2, curl and jq** (sudo apt install net-tools iproute2 curl jq -y) <br>
 
 ```console
 # Instalation:
