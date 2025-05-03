@@ -9,6 +9,26 @@ ROXO="\033[1;95m"
 FIM="\033[0;00m"
 
 
+# Checking if dependencies are installed in the first execution:
+function CHECK_DEP {
+  local DEPEN_="ip free uname awk grep cut tr ps curl jq"
+
+  printf "${ROXO}+ First execution, checking for ${FIM}${VERDE}Rofetch${ROXO} dependencies...${FIM}\n"
+  for CMD_ in DEPEN_; do
+    if command -v "$CMD_" >/dev/null 2>&1; then
+      printf "[Error]: Missing dependency $CMD_\n"
+      exit 2
+    fi
+  done
+  # Creating marker file after first execution
+  touch "$MARKER_FILE"
+}
+
+# Checking for marker file's existence:
+MARKER_FILE="/tmp/.rofetch-first-execution"
+[ ! -f "$MARKER_FILE" ]&& CHECK_DEP
+
+
 # Checking if debug option is set:
 if [[ "${@: -1}" == "-d" ]] || [[ "${@: -1}" == "--debug" ]]; then
   DEBUG_=true
@@ -16,9 +36,6 @@ if [[ "${@: -1}" == "-d" ]] || [[ "${@: -1}" == "--debug" ]]; then
 else
   DEBUG_=false
 fi
-
-# Reading banner file from second argument
-ARQ_="$2"
 
 
 # Option flag functions:
@@ -47,12 +64,14 @@ function HELP_ {
 
 # Version message (-v/--version)
 function VERSION_ {
-  echo -e "\nVersion: 3.1\n\
+  echo -e "\nVersion: 3.2\n\
   + Added more compability for Debian based distros & UNIX/POSIX systems.\n\
   + Detect VM and DE/WM are more dynamic.\n\
   + \"r.txt\" file with default banner is no longer needed.\n\
   Rofetch can now be executed in any location of your system.\n\
   + Rewrote the whole code and made it more legible for programmers.\n\
+  + Checks for dependencies on the first execution.\n\
+  Marker file \".rofetch-first-execution\" will be created in \"/tmp/\" directory.\n\
   - Inspiration quotes variable was commented out and will be a WIP for now\n\
   since it's been consuming a little bit too much of user execution time.\n\
   "
@@ -221,6 +240,9 @@ function READ_BANNER_FUNC {
     lines+=("$line")
   done < "$1"
 }
+
+# Reading banner file from second argument
+ARQ_="$2"
 
 # Checking if the banner flag is set
 if [[ "$1" == "-b" || "$1" == "--banner" ]]; then
