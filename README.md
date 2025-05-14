@@ -1,7 +1,7 @@
 <h1 align="center">rofetch</h2>
 
 <p align="center">
-  <img border="0" src=".img/example.png" alt="roFetch example" title="Isn't it simply awesome?!">
+  <img border="0" src=".img/example1.png" alt="roFetch example" title="Isn't it simply awesome?!">
 </p>
 
 **rofetch, is my home-made GNU/Linux system fetching program which was inspired by neofetch but with an addition of random motivational quotes for you!**
