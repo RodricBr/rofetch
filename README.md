@@ -9,6 +9,12 @@
 
 <hr>
 
+## Example: <br>
+
+<p align="center">
+  <img border="0" src=".img/rofetch-example-gif.gif" alt="roFetch gif example">
+</p>
+
 ## Instalation & Execution <br>
 
 > [!IMPORTANT] 
@@ -25,6 +31,7 @@ $ sudo mv rofetch /usr/local/bin/ # OR ANY OTHER DIRECTORY
 # Execution:
 $ rofetch -h
 ```
+
 
 ## Set custom ascii banner: <br>
 
