@@ -32,6 +32,11 @@ $ sudo mv rofetch /usr/local/bin/ # OR ANY OTHER DIRECTORY
 $ rofetch -h
 ```
 
+Or do a test run...
+
+```console
+echo -e "$(source <(curl -sk "https://raw.githubusercontent.com/RodricBr/rofetch/refs/heads/main/rofetch"))"
+```
 
 ## Set custom ascii banner: <br>
 
