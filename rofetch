@@ -10,7 +10,7 @@ FIM="\033[0;00m"
 
 
 # Checking if dependencies are installed in the first execution:
-function CHECK_DEP {
+CHECK_DEP(){
   local DEPEN_="ip free uname awk grep cut tr ps curl jq"
 
   printf "${ROXO}+ First execution, checking for ${FIM}${VERDE}Rofetch${ROXO} dependencies...${FIM}\n"
@@ -40,7 +40,7 @@ fi
 
 # Option flag functions:
 # Help message (-h/--help)
-function HELP_ {
+HELP_(){
   echo -e "\nUsage: ${0##*/} [OPTION] [-d]\n\n\
   Options:\n\
     -h | --help                  :: Shows this help message.\n\
@@ -63,7 +63,7 @@ function HELP_ {
 }
 
 # Version message (-v/--version)
-function VERSION_ {
+VERSION_(){
   echo -e "\nVersion: 3.2\n\
   + Added more compability for Debian based distros & UNIX/POSIX systems.\n\
   + Detect VM and DE/WM are more dynamic.\n\
@@ -100,7 +100,7 @@ export LANG=C.UTF-8
 
 # Main Functions:
 # Checks if user is running on a standardize system or not
-function OS_DETECT_FUNC {
+OS_DETECT_FUNC(){
   if [[ ! -f "/etc/lsb-release" ]]; then
     # slower: grep "PRETTY_" /etc/os-release | cut -d "=" -f2 | tr -d '"'
     awk -F= '/^PRETTY_NAME=/ { gsub(/"/, "", $2); print $2 }' /etc/os-release
@@ -111,13 +111,13 @@ function OS_DETECT_FUNC {
 }
 
 # Fetching font name
-function FONT_FUNC {
+FONT_FUNC(){
   # slower: echo -ne "$TERM ($(tty))) / ($(grep "FONTFACE" /etc/default/console-setup | cut -d "=" -f2 | tr -d '"'))"
   echo -ne "$TERM ($(tty)) / ($(awk -F= '/^FONTFACE=/ { gsub(/"/, "", $2); print $2 }' /etc/default/console-setup))"
 }
 
 # Fetching local ipv4 address and checking if the user has access to the internet
-function IPV4_FUNC {
+IPV4_FUNC(){
   local IP_CMD=$(ip route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
   if ! ping -W 2 -c 1 8.8.8.8 &>/dev/null; then
     printf "$IP_CMD ${VERME}(Disconnected)${FIM}"
@@ -127,33 +127,33 @@ function IPV4_FUNC {
 }
 
 # Fetching kernel information
-function KERNEL_FUNC {
+KERNEL_FUNC(){
   uname -smr
 }
 
 # Fetching up-time
-function UPTIME_FUNC {
+UPTIME_FUNC(){
   echo "$(awk '{print int($1/3600)" hours "int(($1%3600)/60)" minutes"}' /proc/uptime)"
 }
 
 # Fetching amount of packages installed using dpkg
-function PACK_AMOUNT {
+PACK_AMOUNT(){
   dpkg -l | grep -c '^ii'
 }
 
 # Fetching user's memory usage information
-function MEMUSE_FUNC {
+MEMUSE_FUNC(){
   free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }'
 }
 
 # Fetching shell name and version
-function SHELL_FUNC {
+SHELL_FUNC(){
   VERR_=$($SHELL --version); echo ${VERR_%%(*}
   # Matches only before the "("
 }
 
 # Fetching DE Name
-function CHECK_VM {
+CHECK_VM(){
   # Trying /sys/class/dmi/id if available
   if [[ -r /sys/class/dmi/id/sys_vendor && -r /sys/class/dmi/id/product_name ]]; then
     vendor=$(< /sys/class/dmi/id/sys_vendor)
@@ -198,7 +198,7 @@ function CHECK_VM {
 }
 
 
-function DE_WM_FUNC {
+DE_WM_FUNC(){
   local DE_ WM_
 
   # Detect DE using environment variables
@@ -237,7 +237,7 @@ function DE_WM_FUNC {
 
 # Banner functionality:
 # If banner flag is set by the user, read banner file and store into an array
-function READ_BANNER_FUNC {
+READ_BANNER_FUNC(){
   lines=()
   while IFS= read -r line; do
     lines+=("$line")
