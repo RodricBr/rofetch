@@ -1,7 +1,7 @@
 <h1 align="center">rofetch</h2>
 
 <p align="center">
-  <img border="0" src=".img/example1.png" alt="roFetch example" title="Isn't it simply awesome?!">
+  <img border="0" src=".img/rofetch-1.png" alt="rofetch example" title="rofetch example">
 </p>
 
 **rofetch, is my home-made GNU/Linux system fetching program which was inspired by neofetch but with an addition of random motivational quotes for you!**
@@ -12,7 +12,7 @@
 ## Example: <br>
 
 <p align="center">
-  <img border="0" src=".img/rofetch-example-gif.gif" alt="roFetch gif example">
+  <img border="0" src=".img/rofetch-example-gif.gif" alt="rofetch gif example">
 </p>
 
 ## Instalation & Execution <br>
@@ -45,7 +45,7 @@ $ rofetch -b banner.txt
 ```
 
 <p align="center">
-  <img border="0" src=".img/example-2.png" alt="roFetch banner" title="Banner!">
+  <img border="0" src=".img/rofetch-2.png" alt="rofetch banner" title="rofetch banner">
 </p>
 
 > It is recommended for the ASCII banner to have about 13 lines (the rest will be cut off), and to add some <br>
