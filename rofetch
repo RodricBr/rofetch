@@ -74,6 +74,7 @@ VERSION_(){
   Marker file \".rofetch-first-execution\" will be created in \"/tmp/\" directory.\n\
   - Inspiration quotes variable was commented out and will be a WIP for now\n\
   since it's been consuming a little bit too much of user execution time.\n\
+  - Displaying now Font Name with Font Size next to it.\n\
   "
   exit 0
 }
@@ -110,10 +111,9 @@ OS_DETECT_FUNC(){
   fi
 }
 
-# Fetching font name
+# Fetching font name and font size
 FONT_FUNC(){
-  # slower: echo -ne "$TERM ($(tty))) / ($(grep "FONTFACE" /etc/default/console-setup | cut -d "=" -f2 | tr -d '"'))"
-  echo -ne "$TERM ($(tty)) / ($(awk -F= '/^FONTFACE=/ { gsub(/"/, "", $2); print $2 }' /etc/default/console-setup))"
+  echo -ne "$TERM ($(tty)) / ($(awk -F= '/^(FONTFACE|FONTSIZE)=/ { gsub(/"/, "", $2); a[++i]=$2 } END { printf "%s %s", a[1], a[2] }' /etc/default/console-setup))"
 }
 
 # Fetching local ipv4 address and checking if the user has access to the internet
