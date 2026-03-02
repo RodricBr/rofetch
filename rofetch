@@ -1,20 +1,28 @@
 #!/usr/bin/env bash
 
 
+# Making sure default language is correct
+export LANG=C.UTF-8
+
 # Color variables
 VERME="\033[1;31m"
-VERME2="\033[0;31m"
+BANNER_COLOR="\033[0;31m" # Default
+#SECONDARY_COLOR
 ERROR_="\033[0;31m"
 VERDE="\033[1;32m"
 ROXO="\033[1;95m"
 FIM="\033[0;00m"
 
+# Checking for marker file existence and .config color option file:
+CONFIG_COLOR_FILE="$HOME/.config/rofetch-color-config"
+MARKER_FILE="/tmp/.rofetch-first-execution"
+[ ! -f "$MARKER_FILE" ]&& CHECK_DEP
 
-# Checking if dependencies are installed in the first shell execution:
+# Checking if dependencies are installed in the first execution
 function CHECK_DEP {
   local DEPEN_="ip free uname awk grep cut tr ps curl jq"
 
-  printf "${ROXO}+ First shell execution, checking for ${FIM}${VERDE}Rofetch${ROXO} dependencies...${FIM}\n"
+  printf "${ROXO}+ First execution, checking for ${FIM}${VERDE}Rofetch${ROXO} dependencies...${FIM}\n"
   for CMD_ in DEPEN_; do
     if command -v "$CMD_" >/dev/null 2>&1; then
       printf "[Error]: Missing dependency $CMD_\n"
@@ -25,13 +33,7 @@ function CHECK_DEP {
   touch "$MARKER_FILE"
 }
 
-# Checking for marker file's existence and CONFIG file:
-CONFIG_COLOR_FILE="$HOME/.config/rofetch-color-config"
-MARKER_FILE="/tmp/.rofetch-first-execution"
-[ ! -f "$MARKER_FILE" ]&& CHECK_DEP
-
-
-# Checking if debug option is set:
+# Checking for debug option flag:
 if [[ "${@: -1}" == "-d" ]] || [[ "${@: -1}" == "--debug" ]]; then
   DEBUG_=true
   set -x
@@ -39,8 +41,6 @@ else
   DEBUG_=false
 fi
 
-
-# Option flag functions:
 # Help message (-h/--help)
 function HELP_ {
   echo -e "\nUsage: ${0##*/} [OPTION] [-d]\n\n\
@@ -71,7 +71,7 @@ function HELP_ {
   exit 0
 }
 
-# Version message (-v/--version)
+# Version message and changelog (-v/--version)
 function VERSION_ {
   echo -e "\nVersion: 4.0\n\
   + Added more compability for Debian based distros & UNIX/POSIX systems.\n\
@@ -90,12 +90,11 @@ function VERSION_ {
   exit 0
 }
 
-
-# Calling the help or version function if flags are being called
+# Invoking help/version function if called
 [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]&& HELP_
 [[ "$1" == "-v" ]] || [[ "$1" == "--version" ]]&& VERSION_
-#[[ "$1" == "-bc" ]] || [[ "$1" == "--banner-color" ]]&& VERME2="$2"
 
+# Declaring array with "nicknames" for string colors (-bc/-sbc flag)
 declare -A STRING_COLORS=(
   [green]="\033[0;32m"
   [light green]="\033[1;32m"
@@ -109,56 +108,60 @@ declare -A STRING_COLORS=(
   [light cyan]="\033[38;5;159m"
   [purple]="\033[38;5;57m"
   [light purple]="\033[38;5;135m"
+  [pink]="\033[38;5;171m"
+  [light pink]="\033[38;5;183m"
   [white]="\033[38;5;255m"
   [grey]="\033[38;5;244m"
   [black]="\033[38;5;232m" #\033[38;5;233m # lesser black
 )
 
+# Creating .config color file if non existant and checking if there's set color
 if [[ -f "$CONFIG_COLOR_FILE" ]]; then
   SAVED_COLOR=$(<"$CONFIG_COLOR_FILE")
   if [[ -n "${STRING_COLORS[$SAVED_COLOR]}" ]]; then
-    VERME2="${STRING_COLORS[$SAVED_COLOR]}"
+    BANNER_COLOR="${STRING_COLORS[$SAVED_COLOR]}"
   fi
 fi
 
+# Checking marker file's existance
 if [[ -f "$MARKER_FILE" ]]; then
   COLOR=$(<"$MARKER_FILE")
 fi
 
 echo "$COLOR" > "$MARKER_FILE"
 
+# Attributing banner color option flag (temporary)
 if [[ "$1" == "-bc" ]] || [[ "$1" == "--banner-color" ]]; then
   if [[ -n "${STRING_COLORS[$2]}" ]]; then
-    VERME2="${STRING_COLORS[$2]}"
+    BANNER_COLOR="${STRING_COLORS[$2]}"
   else
     printf "${ERROR_}[Error]:${FIM} Invalid color \"%s\"! Available colors: %s\n" "$2" \
       "$(printf "%s\n" "${!STRING_COLORS[@]}" \
       | sort | while read -r c; do printf "%s, " "$c"; done \
-      | sed 's/, $//')"
+      | sed 's/, $//')" # <--
     exit 1
   fi
 fi
 
+# Attributing set banner color option flag (permanent)
 if [[ "$1" == "-sbc" ]] || [[ "$1" == "--set-banner-color" ]]; then
   if [[ -n "${STRING_COLORS[$2]}" ]]; then
     mkdir -p "$(dirname "$CONFIG_COLOR_FILE")"
     echo "$2" > "$CONFIG_COLOR_FILE"
-    VERME2="${STRING_COLORS[$2]}"
+    BANNER_COLOR="${STRING_COLORS[$2]}"
   else
     printf "${ERROR_}[Error]:${FIM} Invalid color \"$2\"! Available colors: ${!STRING_COLORS[*]}\n"
     exit 1
   fi
 fi
 
-# Resets to default banner color
+# Resets to default banner color by deleting .config file
 if [[ "$1" == "--reset-banner-color" ]]; then
   rm -f "$CONFIG_COLOR_FILE"
   #printf "${INFO_}Banner color reset to default.${FIM}\n"
   exit 0
 fi
 
-# Other variables:
-export LANG=C.UTF-8
 # Quotes (previous quotes api is no longer available)
 #MSG_=$(
 #curl -s "https://dummyjson.com/quotes" | jq -r '
@@ -200,22 +203,22 @@ function IPV4_FUNC {
   fi
 }
 
-# Getting kernel information
+# Fetching kernel information
 function KERNEL_FUNC {
   uname -smr
 }
 
-# Getting up time
+# Fetching up time
 function UPTIME_FUNC {
   echo "$(awk '{print int($1/3600)" hours "int(($1%3600)/60)" minutes"}' /proc/uptime)"
 }
 
-# Getting user's memory usage information
+# Fetching user's memory usage information
 function MEMUSE_FUNC {
   free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }'
 }
 
-# Getting shell name and version
+# Fetching shell name and version
 function SHELL_FUNC {
   VERR_=$($SHELL --version); echo ${VERR_%%(*}
 
@@ -223,7 +226,7 @@ function SHELL_FUNC {
 
 }
 
-# Getting DE Name
+# Fetching DE Name
 function CHECK_VM {
   # Trying /sys/class/dmi/id if available
   if [[ -r /sys/class/dmi/id/sys_vendor && -r /sys/class/dmi/id/product_name ]]; then
@@ -268,7 +271,7 @@ function CHECK_VM {
   printf "Unknown"
 }
 
-
+# Checking window manager
 function DE_WM_FUNC {
   local DE_ WM_
 
@@ -285,8 +288,8 @@ function DE_WM_FUNC {
     DE_="Unknown DE"
   fi
 
-    # Detect WM using running processes
-    # Use pgrep for common WMs, ordered by likelihood
+  # Detect WM using running processes
+  # Use pgrep for common WMs, ordered by likelihood
   local WM_LIST=(
     "mutter" "kwin" "xfwm4" "openbox" "i3" "bspwm" "awesome"
     "xmonad" "marco" "fluxbox" "icewm" "enlightenment" "compiz" "herbstluftwm"
@@ -299,6 +302,7 @@ function DE_WM_FUNC {
     fi
   done
 
+  # Fallback: no wm was identified, set as unknown
   if [[ -z "$WM_" ]]; then
     WM_="Unknown WM"
   fi
@@ -306,8 +310,8 @@ function DE_WM_FUNC {
   echo "$DE_ / $WM_"
 }
 
-# Banner functionality:
-# If banner flag is set by the user, read banner file and store into an array
+# Set banner function (-b/--banner)
+# If banner flag is called, read banner file and store into an array
 function READ_BANNER_FUNC {
   lines=()
   while IFS= read -r line; do
@@ -316,9 +320,9 @@ function READ_BANNER_FUNC {
 }
 
 # Reading banner file from second argument
-ARQ_="$2"
+ARQ_="$2" # <--
 
-# Checking if the banner flag is set
+# Checking if the banner flag is called
 if [[ "$1" == "-b" || "$1" == "--banner" ]]; then
   # if a custom banner file is defined...
   if [[ -f "$ARQ_" ]]; then
@@ -334,6 +338,7 @@ if [[ "$1" == "-b" || "$1" == "--banner" ]]; then
   fi
 else
   # If no banner flag is set, this shall be the default ascii art:
+  # braille unicodes could be troublesome for some systems due to font compatibility
   lines=(
     "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
     "⣿⣿⣿⠿⠿⠟⠛⠛⠛⠋⠉⠉⠉⠉⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿"
@@ -359,22 +364,26 @@ if $DEBUG_; then
 fi
 
 
-# Main structure:
-echo -e "\n${VERME2}${lines[0]}"
+# Main banner structure:
+echo -e "\n${BANNER_COLOR}${lines[0]}"
 echo -e "${lines[1]}  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
-echo -e "${VERME2}${lines[2]}"
+echo -e "${BANNER_COLOR}${lines[2]}"
 echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(OS_DETECT_FUNC) ($(CHECK_VM))"
-echo -e "${VERME2}${lines[4]}  ${VERME}Terminal & Font${FIM}:\t $(FONT_FUNC)"
-echo -e "${VERME2}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(IPV4_FUNC)"
-echo -e "${VERME2}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(KERNEL_FUNC)"
-echo -e "${VERME2}${lines[7]}  ${VERME}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
-echo -e "${VERME2}${lines[8]}  $(MEMUSE_FUNC)"
-echo -e "${VERME2}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(SHELL_FUNC)"
-echo -e "${VERME2}${lines[10]}  ${VERME}DE & WM${FIM}:\t\t $(DE_WM_FUNC)"
-echo -e "${VERME2}${lines[11]}${FIM}"
-echo -e "${VERME2}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
-echo -e "${VERME2}${lines[13]}${FIM}"
-echo -e "${VERME2}${lines[14]}${FIM}"
+echo -e "${BANNER_COLOR}${lines[4]}  ${VERME}Terminal & Font${FIM}:\t $(FONT_FUNC)"
+echo -e "${BANNER_COLOR}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(IPV4_FUNC)"
+echo -e "${BANNER_COLOR}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(KERNEL_FUNC)"
+echo -e "${BANNER_COLOR}${lines[7]}  ${VERME}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
+echo -e "${BANNER_COLOR}${lines[8]}  $(MEMUSE_FUNC)"
+echo -e "${BANNER_COLOR}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(SHELL_FUNC)"
+echo -e "${BANNER_COLOR}${lines[10]}  ${VERME}DE & WM${FIM}:\t\t $(DE_WM_FUNC)"
+echo -e "${BANNER_COLOR}${lines[11]}${FIM}"
+echo -e "${BANNER_COLOR}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
+echo -e "${BANNER_COLOR}${lines[13]}${FIM}"
+echo -e "${BANNER_COLOR}${lines[14]}${FIM}"
 
-unset MSG_ VERME VERME2 VERDE ROXO FIM CHECK_VM_
+#unset MSG_ VERME BANNER_COLOR VERDE ROXO FIM CHECK_VM_ # <--
 exit 0
+
+
+## TODO: ##
+# -csc :: Change secondary text color ($VERME)
