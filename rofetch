@@ -505,3 +505,4 @@ exit 0
 
 
 # ver "<--" para mudanças
+# strace é maneiro pra debug
