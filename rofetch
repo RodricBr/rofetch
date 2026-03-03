@@ -5,32 +5,38 @@
 export LANG=C.UTF-8
 
 # Color variables
-VERME="\033[1;31m"
-BANNER_COLOR="\033[0;31m" # Default
-#SECONDARY_COLOR
+BANNER_COLOR="\033[0;31m" # Default light red to match banner color
+SECONDARY_COLOR="\033[1;31m" # same ^^^^
 ERROR_="\033[0;31m"
 VERDE="\033[1;32m"
 ROXO="\033[1;95m"
 FIM="\033[0;00m"
 
-# Checking for marker file existence and .config color option file:
+# Checking for tmp marker file existence and .config color option file:
 CONFIG_COLOR_FILE="$HOME/.config/rofetch-color-config"
 MARKER_FILE="/tmp/.rofetch-first-execution"
-[ ! -f "$MARKER_FILE" ]&& CHECK_DEP
 
 # Checking if dependencies are installed in the first execution
 function CHECK_DEP {
-  local DEPEN_="ip free uname awk grep cut tr ps curl jq"
+  local DEPEN_="ip ping free uname awk grep cut tr ps curl jq"
 
   printf "${ROXO}+ First execution, checking for ${FIM}${VERDE}Rofetch${ROXO} dependencies...${FIM}\n"
   for CMD_ in DEPEN_; do
     if command -v "$CMD_" >/dev/null 2>&1; then
-      printf "[Error]: Missing dependency $CMD_\n"
+      printf "${ERROR_}[Error]:${FIM} Missing dependency: $CMD_\n"
       exit 2
     fi
   done
   # Creating marker file after first execution
   touch "$MARKER_FILE"
+}
+
+# Checks for marker_file's existence, if it doesn't exist,
+# creates it. (%/* shell native dirname alternative, instead of spawning new subshell)
+[[ -f $MARKER_FILE ]] || {
+  CHECK_DEP
+  mkdir -p "${MARKER_FILE%/*}"
+  : > "$MARKER_FILE"
 }
 
 # Checking for debug option flag:
@@ -43,49 +49,59 @@ fi
 
 # Help message (-h/--help)
 function HELP_ {
-  echo -e "\nUsage: ${0##*/} [OPTION] [-d]\n\n\
-  OPTIONS:\n\
-    -h | --help                  :: Shows this help message.\n\
-    -v | --version               :: Shows current program version with changelog.\n\
-    -b | --banner /path/to/file  :: Set custom ASCII art banner. Must be no more than 15 lines.\n\
-    -d | --debug                 :: Runs the program with bash's debug mode.\n\
-                                    Debug flag MUST be the last argument!\n\
-                                    Example: ./rofetch -b ascii.txt -d\n\
-    BANNER OPTIONS:
-    -bc  | --banner-color \"...\"    :: Temporaly changes banner color to a set of colors in a list.
-                                      Use -bc \"x\" to see list of colors\n\
-    -sbc | --set-banner-color \"...\":: Permanently changes banner color and storages in a .config file\n\
-    --reset-banner-color           :: Resets banner color to default.\n\
+  echo -e "
+Usage: ${0##*/} [OPTION] [-d]
 
-  DESCRIPTION:\n\
-  Rofetch is a command line interface system information tool inspired by neofetch\n\
-  written fully in bash script. Its main purpose is to be fast, reliable and clean.\n\
-  Rofetch displays information next to a default \"R\" ASCII art but the art can also\n\
-  be modified by a file containing your ASCII art of choice using the \"-b/--banner\" option.\n\
-  The file needs to have no more than 15 lines otherwise it'll be cut off.\n\
+OPTIONS:
+  -h | --help                     :: Shows this help message.
+  -v | --version                  :: Shows current program version with changelog.
+  -b | --banner /path/to/file     :: Set custom ASCII art banner. Must be no more than 15 lines.
+  -d | --debug                    :: Runs the program with bash's debug mode.
+                                     Debug flag MUST be the last argument!
+                                     Example: ./rofetch -b ascii.txt -d
+  CUSTOMIZATION OPTIONS:
+  -bc  | --banner-color \"...\"     :: Temporaly changes banner color to a set of colors in a list. Use -bc \"x\" to see list of colors
+  -sbc | --set-banner-color \"...\" :: Permanently changes banner color and storages in $HOME/.config/rofetch-color-config
+
+  -sc  | --secondary-color \"...\"  :: Temporaly changes secondary color to a set of colors in a list. Use -bc \"x\" to see list of colors
+  -ssc | --set-string-color \"...\" :: Permanently changes secondary color and storages in $HOME/.config/rofetch-color-config
+  --reset-default                 :: Resets banner and secondary color to default (light red).
+
+DESCRIPTION:
+Rofetch is a command line interface system information tool inspired by neofetch
+written fully in bash script. Its main purpose is to be fast, reliable and clean.
+Rofetch displays information next to a default \"R\" ASCII art but the art can also
+be modified by a file containing your ASCII art of choice using the \"-b/--banner\" option.
+The file needs to have no more than 15 lines otherwise it'll be cut off.
 
 
-  Improvements ideas and bug reports are welcome and can be solicited at:\n\
-  https://github.com/RodricBr/rofetch/issues\n\
-  "
+Improvements ideas and bug reports are welcome and can be solicited at:
+https://github.com/RodricBr/rofetch/issues
+"
   exit 0
 }
 
 # Version message and changelog (-v/--version)
 function VERSION_ {
-  echo -e "\nVersion: 4.0\n\
-  + Added more compability for Debian based distros & UNIX/POSIX systems.\n\
-  + Detect VM and DE/WM are more dynamic.\n\
-  + \"r.txt\" file with default banner is no longer needed.\n\
-  Rofetch can now be executed in any location of your system.\n\
-  + Rewrote the whole code and made it more legible for programmers.\n\
-  + Checks for dependencies on the first execution.\n\
-  Marker file \".rofetch-first-execution\" will be created in \"/tmp/\" directory.\n\
-  + New temporary changeable banner color\n\
-  + New permanent banner color configuration file ($HOME/.config/rofetch-color-config)\n\
-  + New reset default banner color flag\n\
-  - Inspiration quotes variable was commented out and will be a WIP for now\n\
-  since it's been consuming a little bit too much of user execution time.\n\
+  echo -e "
+Version: 3.3
+  + Added more compability for Debian based distros & UNIX/POSIX systems.
+  + Detect VM and DE/WM are more dynamic.
+  + \"r.txt\" file with default banner is no longer needed.
+  Rofetch can now be executed in any location of your system.
+  + Rewrote the whole code and made it more legible for programmers.
+  + Checks for dependencies on the first execution.
+  Marker file \".rofetch-first-execution\" will be created in \"/tmp/\" directory.
+  - Inspiration quotes variable was commented out and will be a WIP for now
+  since it's been consuming a little bit too much of user execution time.
+
+Version: 4.0
+  + New temporary and permanent changeable banner color with configuration file ($HOME/.config/rofetch-color-config)
+  + New temporary and permanent changeable secondary string color with configuration file ($HOME/.config/rofetch-color-config)
+  + New reset default colors flag
+  + Fixed IPv4 hanging on startup
+  + Improved code and comments legibility
+  + Overall code cleanup and improvements
   "
   exit 0
 }
@@ -117,28 +133,38 @@ declare -A STRING_COLORS=(
 
 # Creating .config color file if non existant and checking if there's set color
 if [[ -f "$CONFIG_COLOR_FILE" ]]; then
-  SAVED_COLOR=$(<"$CONFIG_COLOR_FILE")
-  if [[ -n "${STRING_COLORS[$SAVED_COLOR]}" ]]; then
-    BANNER_COLOR="${STRING_COLORS[$SAVED_COLOR]}"
-  fi
+  while IFS= read -r line; do
+    case "$line" in
+      "[banner-color]"*" "*)
+        SAVED_BANNER_COLOR="${line#* }"
+        ;;
+      "[secondary-color]"*" "*)
+        SAVED_SECONDARY_COLOR="${line#* }"
+        ;;
+    esac
+  done < "$CONFIG_COLOR_FILE"
+
+  [[ -n "$SAVED_BANNER_COLOR" ]] \
+    && BANNER_COLOR="${STRING_COLORS[$SAVED_BANNER_COLOR]}"
+
+  [[ -n "$SAVED_SECONDARY_COLOR" ]] \
+    && SECONDARY_COLOR="${STRING_COLORS[$SAVED_SECONDARY_COLOR]}"
 fi
 
-# Checking marker file's existance
-if [[ -f "$MARKER_FILE" ]]; then
-  COLOR=$(<"$MARKER_FILE")
-fi
-
-echo "$COLOR" > "$MARKER_FILE"
+# If color user sets is invalid, print available colors
+function INVALID_COLOR {
+  printf "${ERROR_}[Error]:${FIM} Invalid color \"%s\"! Available colors: %s\n" "$2" \
+      "$(printf "%s\n" "${!STRING_COLORS[@]}" \
+      | sort | while read -r c; do printf "%s, " "$c"; done \
+      | sed 's/, $//')"
+}
 
 # Attributing banner color option flag (temporary)
 if [[ "$1" == "-bc" ]] || [[ "$1" == "--banner-color" ]]; then
   if [[ -n "${STRING_COLORS[$2]}" ]]; then
     BANNER_COLOR="${STRING_COLORS[$2]}"
   else
-    printf "${ERROR_}[Error]:${FIM} Invalid color \"%s\"! Available colors: %s\n" "$2" \
-      "$(printf "%s\n" "${!STRING_COLORS[@]}" \
-      | sort | while read -r c; do printf "%s, " "$c"; done \
-      | sed 's/, $//')" # <--
+    INVALID_COLOR
     exit 1
   fi
 fi
@@ -147,7 +173,29 @@ fi
 if [[ "$1" == "-sbc" ]] || [[ "$1" == "--set-banner-color" ]]; then
   if [[ -n "${STRING_COLORS[$2]}" ]]; then
     mkdir -p "$(dirname "$CONFIG_COLOR_FILE")"
-    echo "$2" > "$CONFIG_COLOR_FILE"
+
+    TMP_FILE="${CONFIG_COLOR_FILE}.tmp"
+    found=0
+
+    [[ -f "$CONFIG_COLOR_FILE" ]] || : > "$CONFIG_COLOR_FILE"
+
+    while IFS= read -r line; do
+      case "$line" in
+        "[banner-color]"*)
+          printf '[banner-color] %s\n' "$2" >> "$TMP_FILE"
+          found=1
+          ;;
+        *)
+          printf '%s\n' "$line" >> "$TMP_FILE"
+          ;;
+      esac
+    done < "$CONFIG_COLOR_FILE"
+
+    [[ $found -eq 0 ]] \
+      && printf '[banner-color] %s\n' "$2" >> "$TMP_FILE"
+
+    mv "$TMP_FILE" "$CONFIG_COLOR_FILE"
+
     BANNER_COLOR="${STRING_COLORS[$2]}"
   else
     printf "${ERROR_}[Error]:${FIM} Invalid color \"$2\"! Available colors: ${!STRING_COLORS[*]}\n"
@@ -155,8 +203,53 @@ if [[ "$1" == "-sbc" ]] || [[ "$1" == "--set-banner-color" ]]; then
   fi
 fi
 
+# Attributing set secondary string color option (temporary)
+if [[ "$1" == "-sc" ]] || [[ "$1" == "--secondary-color" ]]; then
+  if [[ -n "${STRING_COLORS[$2]}" ]]; then
+    SECONDARY_COLOR="${STRING_COLORS[$2]}"
+  else
+    INVALID_COLOR
+    exit 1
+  fi
+fi
+
+# Attributing set secondary string color option (permanent)
+if [[ "$1" == "-ssc" ]] || [[ "$1" == "--set-string-color" ]]; then
+  if [[ -n "${STRING_COLORS[$2]}" ]]; then
+    mkdir -p "$(dirname "$CONFIG_COLOR_FILE")"
+
+    TMP_FILE="${CONFIG_COLOR_FILE}.tmp"
+    found=0
+
+    [[ -f "$CONFIG_COLOR_FILE" ]] || : > "$CONFIG_COLOR_FILE"
+
+    while IFS= read -r line; do
+      case "$line" in
+        "[secondary-color]"*)
+          printf '[secondary-color] %s\n' "$2" >> "$TMP_FILE"
+          found=1
+          ;;
+        *)
+          printf '%s\n' "$line" >> "$TMP_FILE"
+          ;;
+      esac
+    done < "$CONFIG_COLOR_FILE"
+
+    [[ $found -eq 0 ]] \
+      && printf '[secondary-color] %s\n' "$2" >> "$TMP_FILE"
+
+    mv "$TMP_FILE" "$CONFIG_COLOR_FILE"
+
+    SECONDARY_COLOR="${STRING_COLORS[$2]}"
+  else
+    printf "${ERROR_}[Error]:${FIM} Invalid color \"$2\"! Available colors: ${!STRING_COLORS[*]}\n"
+    exit 1
+  fi
+  #[[ -z "${STRING_COLORS[$value]}" ]] && continue
+fi
+
 # Resets to default banner color by deleting .config file
-if [[ "$1" == "--reset-banner-color" ]]; then
+if [[ "$1" == "--reset-default" ]]; then
   rm -f "$CONFIG_COLOR_FILE"
   #printf "${INFO_}Banner color reset to default.${FIM}\n"
   exit 0
@@ -186,21 +279,35 @@ function OS_DETECT_FUNC {
   fi
 }
 
-# Getting font name
+# Getting font name <-- (adc mais compatibilidade (/etc/vconsole.conf))
 function FONT_FUNC {
-  # slower: echo -ne "$TERM ($(tty))) / ($(grep "FONTFACE" /etc/default/console-setup | cut -d "=" -f2 | tr -d '"'))"
-  #echo -ne "$TERM ($(tty)) / ($(awk -F= '/^FONTFACE=/ { gsub(/"/, "", $2); print $2 }' /etc/default/console-setup))"
   echo -ne "$TERM ($(tty)) / ($(awk -F= '/^(FONTFACE|FONTSIZE)=/ { gsub(/"/, "", $2); a[++i]=$2 } END { printf "%s %s", a[1], a[2] }' /etc/default/console-setup))"
 }
 
-# Getting local ipv4 address and checking if the user has access to the internet
+# Getting local ipv4 address and checks if the machine has access to the internet
 function IPV4_FUNC {
-  local IP_CMD=$(ip route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
-  if ! ping -W 2 -c 1 8.8.8.8 &>/dev/null; then
-    printf "$IP_CMD ${VERME}(Disconnected)${FIM}"
-  else
-    printf "$IP_CMD ${VERDE}(Connected)${FIM}"
+  local ip status
+
+  # Storing local ipv4 address
+  ip=$(ip -4 route get 1.1.1.1 2>/dev/null \
+       | awk '{for(i=1;i<=NF;i++) if ($i=="src") {print $(i+1); exit}}')
+
+  [[ -z "$ip" ]] && ip="N/A" # <-- might wanna enhance this
+
+  # Checks if there's an ip address stored in ip variable, if not then (disconnected)
+  if [[ "$ip" == "N/A" ]]; then
+    printf "%s %b" "$ip" "${ERROR_}(Disconnected)${FIM}"
+    return
   fi
+
+  # If ping succeeds, connected, otherwise, disconnected
+  if ping -c 1 -W 0.2 1.1.1.1 >/dev/null 2>&1; then
+    status="${VERDE}(Connected)${FIM}"
+  else
+    status="${ERROR_}(Disconnected)${FIM}"
+  fi
+
+  printf "%s %b" "$ip" "$status"
 }
 
 # Fetching kernel information
@@ -215,7 +322,7 @@ function UPTIME_FUNC {
 
 # Fetching user's memory usage information
 function MEMUSE_FUNC {
-  free -m | awk 'NR==2{printf "\033[1;31mMemory Usage\033[0m: \t %s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2 }'
+  free -m | awk 'NR==2{printf "%s / %sMiB (%.2f%%)\n", $3,$2,$3*100/$2}'
 }
 
 # Fetching shell name and version
@@ -364,26 +471,34 @@ if $DEBUG_; then
 fi
 
 
-# Main banner structure:
+# Main banner section
 echo -e "\n${BANNER_COLOR}${lines[0]}"
 echo -e "${lines[1]}  ${VERDE}$USER${FIM}@${VERDE}$HOSTNAME${FIM}"
 echo -e "${BANNER_COLOR}${lines[2]}"
-echo -e "${lines[3]}  ${VERME}OS${FIM}:\t\t\t $(OS_DETECT_FUNC) ($(CHECK_VM))"
-echo -e "${BANNER_COLOR}${lines[4]}  ${VERME}Terminal & Font${FIM}:\t $(FONT_FUNC)"
-echo -e "${BANNER_COLOR}${lines[5]}  ${VERME}IPv4 (Local)${FIM}:\t $(IPV4_FUNC)"
-echo -e "${BANNER_COLOR}${lines[6]}  ${VERME}Kernel${FIM}:\t\t $(KERNEL_FUNC)"
-echo -e "${BANNER_COLOR}${lines[7]}  ${VERME}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
-echo -e "${BANNER_COLOR}${lines[8]}  $(MEMUSE_FUNC)"
-echo -e "${BANNER_COLOR}${lines[9]}  ${VERME}Shell${FIM}:\t\t $(SHELL_FUNC)"
-echo -e "${BANNER_COLOR}${lines[10]}  ${VERME}DE & WM${FIM}:\t\t $(DE_WM_FUNC)"
+echo -e "${lines[3]}  ${SECONDARY_COLOR}OS${FIM}:\t\t\t $(OS_DETECT_FUNC) ($(CHECK_VM))"
+echo -e "${BANNER_COLOR}${lines[4]}  ${SECONDARY_COLOR}Terminal & Font${FIM}:\t $(FONT_FUNC)"
+echo -e "${BANNER_COLOR}${lines[5]}  ${SECONDARY_COLOR}IPv4 (Local)${FIM}:\t $(IPV4_FUNC)"
+echo -e "${BANNER_COLOR}${lines[6]}  ${SECONDARY_COLOR}Kernel${FIM}:\t\t $(KERNEL_FUNC)"
+echo -e "${BANNER_COLOR}${lines[7]}  ${SECONDARY_COLOR}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
+echo -e "${BANNER_COLOR}${lines[8]}  ${SECONDARY_COLOR}Memory Usage:${FIM}:\t $(MEMUSE_FUNC)"
+echo -e "${BANNER_COLOR}${lines[9]}  ${SECONDARY_COLOR}Shell${FIM}:\t\t $(SHELL_FUNC)"
+echo -e "${BANNER_COLOR}${lines[10]}  ${SECONDARY_COLOR}DE & WM${FIM}:\t\t $(DE_WM_FUNC)"
 echo -e "${BANNER_COLOR}${lines[11]}${FIM}"
 echo -e "${BANNER_COLOR}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
 echo -e "${BANNER_COLOR}${lines[13]}${FIM}"
 echo -e "${BANNER_COLOR}${lines[14]}${FIM}"
 
-#unset MSG_ VERME BANNER_COLOR VERDE ROXO FIM CHECK_VM_ # <--
+#unset MSG_ SECONDARY_COLOR BANNER_COLOR VERDE ROXO FIM CHECK_VM_ # <--
 exit 0
 
 
-## TODO: ##
-# -csc :: Change secondary text color ($VERME)
+# TODO #
+# 1.0:
+# add possibility to change user@host colors as well and
+# (Connected), (Disconnected) for more customization purposes
+#
+# 1.1:
+# improve main banner section to be more readable? and to support future changes (#474)
+
+
+# ver "<--" para mudanças
