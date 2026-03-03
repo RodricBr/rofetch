@@ -5,18 +5,21 @@
 export LANG=C.UTF-8
 
 # Color variables
-BANNER_COLOR="\033[0;31m" # Default light red to match banner color
-SECONDARY_COLOR="\033[1;31m" # same ^^^^
-ERROR_="\033[0;31m"
 VERDE="\033[1;32m"
 ROXO="\033[1;95m"
+
+BANNER_COLOR="\033[0;31m" # Default light red to match banner color
+SECONDARY_COLOR="\033[1;31m" # same ^^^^
+
+INFO_="\033[38;5;39m"
+ERROR_="\033[0;31m"
 FIM="\033[0;00m"
 
 # Checking for tmp marker file existence and .config color option file:
 CONFIG_COLOR_FILE="$HOME/.config/rofetch-color-config"
 MARKER_FILE="/tmp/.rofetch-first-execution"
 
-# Checking if dependencies are installed in the first execution
+# Checking if dependencies are installed in the first execution (first shell execution??) # <--
 function CHECK_DEP {
   local DEPEN_="ip ping free uname awk grep cut tr ps curl jq"
 
@@ -65,7 +68,7 @@ OPTIONS:
 
   -sc  | --secondary-color \"...\"  :: Temporaly changes secondary color to a set of colors in a list. Use -bc \"x\" to see list of colors
   -ssc | --set-string-color \"...\" :: Permanently changes secondary color and storages in $HOME/.config/rofetch-color-config
-  --reset-default                 :: Resets banner and secondary color to default (light red).
+  --reset-default                 :: Resets banner and secondary color to default.
 
 DESCRIPTION:
 Rofetch is a command line interface system information tool inspired by neofetch
@@ -96,8 +99,8 @@ Version: 3.3
   since it's been consuming a little bit too much of user execution time.
 
 Version: 4.0
-  + New temporary and permanent changeable banner color with configuration file ($HOME/.config/rofetch-color-config)
-  + New temporary and permanent changeable secondary string color with configuration file ($HOME/.config/rofetch-color-config)
+  + New temporary and permanent changeable banner color with configuration file (see: $HOME/.config/rofetch-color-config)
+  + New temporary and permanent changeable secondary string color with configuration file (see: $HOME/.config/rofetch-color-config)
   + New reset default colors flag
   + Fixed IPv4 hanging on startup
   + Improved code and comments legibility
@@ -130,6 +133,13 @@ declare -A STRING_COLORS=(
   [grey]="\033[38;5;244m"
   [black]="\033[38;5;232m" #\033[38;5;233m # lesser black
 )
+
+# Resets to default banner color by deleting .config file
+if [[ "$1" == "--reset-default" ]]; then
+  rm -f "$HOME/.config/rofetch-color-config" #"$CONFIG_COLOR_FILE"
+  echo -e "${INFO_}Secondary and banner colors reset to default.${FIM}\n"
+  exit 0
+fi
 
 # Creating .config color file if non existant and checking if there's set color
 if [[ -f "$CONFIG_COLOR_FILE" ]]; then
@@ -172,7 +182,7 @@ fi
 # Attributing set banner color option flag (permanent)
 if [[ "$1" == "-sbc" ]] || [[ "$1" == "--set-banner-color" ]]; then
   if [[ -n "${STRING_COLORS[$2]}" ]]; then
-    mkdir -p "$(dirname "$CONFIG_COLOR_FILE")"
+    mkdir -p "${CONFIG_COLOR_FILE%/*}"
 
     TMP_FILE="${CONFIG_COLOR_FILE}.tmp"
     found=0
@@ -216,7 +226,7 @@ fi
 # Attributing set secondary string color option (permanent)
 if [[ "$1" == "-ssc" ]] || [[ "$1" == "--set-string-color" ]]; then
   if [[ -n "${STRING_COLORS[$2]}" ]]; then
-    mkdir -p "$(dirname "$CONFIG_COLOR_FILE")"
+    mkdir -p "${CONFIG_COLOR_FILE%/*}"
 
     TMP_FILE="${CONFIG_COLOR_FILE}.tmp"
     found=0
@@ -248,13 +258,6 @@ if [[ "$1" == "-ssc" ]] || [[ "$1" == "--set-string-color" ]]; then
   #[[ -z "${STRING_COLORS[$value]}" ]] && continue
 fi
 
-# Resets to default banner color by deleting .config file
-if [[ "$1" == "--reset-default" ]]; then
-  rm -f "$CONFIG_COLOR_FILE"
-  #printf "${INFO_}Banner color reset to default.${FIM}\n"
-  exit 0
-fi
-
 # Quotes (previous quotes api is no longer available)
 #MSG_=$(
 #curl -s "https://dummyjson.com/quotes" | jq -r '
@@ -279,7 +282,7 @@ function OS_DETECT_FUNC {
   fi
 }
 
-# Getting font name <-- (adc mais compatibilidade (/etc/vconsole.conf))
+# Getting font name
 function FONT_FUNC {
   echo -ne "$TERM ($(tty)) / ($(awk -F= '/^(FONTFACE|FONTSIZE)=/ { gsub(/"/, "", $2); a[++i]=$2 } END { printf "%s %s", a[1], a[2] }' /etc/default/console-setup))"
 }
@@ -492,13 +495,5 @@ echo -e "${BANNER_COLOR}${lines[14]}${FIM}"
 exit 0
 
 
-# TODO #
-# 1.0:
-# add possibility to change user@host colors as well and
-# (Connected), (Disconnected) for more customization purposes
-#
-# 1.1:
-# improve main banner section to be more readable? and to support future changes (#474)
-
-
-# ver "<--" para mudanças
+## TODO: ##
+# -csc :: Change secondary text color ($SECONDARY_COLOR)
