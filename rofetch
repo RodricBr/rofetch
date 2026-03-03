@@ -489,7 +489,7 @@ echo -e "${BANNER_COLOR}${lines[10]}  ${SECONDARY_COLOR}DE & WM${FIM}:\t\t $(DE_
 echo -e "${BANNER_COLOR}${lines[11]}${FIM}"
 echo -e "${BANNER_COLOR}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
 echo -e "${BANNER_COLOR}${lines[13]}${FIM}"
-echo -e "${BANNER_COLOR}${lines[14]}${FIM}"
+echo -ne "${BANNER_COLOR}${lines[14]}${FIM}"
 
 #unset MSG_ SECONDARY_COLOR BANNER_COLOR VERDE ROXO FIM CHECK_VM_ # <--
 exit 0
