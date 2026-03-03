@@ -19,11 +19,11 @@ FIM="\033[0;00m"
 CONFIG_COLOR_FILE="$HOME/.config/rofetch-color-config"
 MARKER_FILE="/tmp/.rofetch-first-execution"
 
-# Checking if dependencies are installed in the first execution (first shell execution??) # <--
+# Checking if dependencies are installed in the first execution
 function CHECK_DEP {
   local DEPEN_="ip ping free uname awk grep cut tr ps curl jq"
 
-  printf "${ROXO}+ First execution, checking for ${FIM}${VERDE}Rofetch${ROXO} dependencies...${FIM}\n"
+  printf "${ROXO}+ First execution. Checking for ${FIM}${VERDE}Rofetch${ROXO} dependencies...${FIM}\n"
   for CMD_ in DEPEN_; do
     if command -v "$CMD_" >/dev/null 2>&1; then
       printf "${ERROR_}[Error]:${FIM} Missing dependency: $CMD_\n"
@@ -282,7 +282,7 @@ function OS_DETECT_FUNC {
   fi
 }
 
-# Getting font name
+# Getting font name <-- (adc mais compatibilidade (/etc/vconsole.conf))
 function FONT_FUNC {
   echo -ne "$TERM ($(tty)) / ($(awk -F= '/^(FONTFACE|FONTSIZE)=/ { gsub(/"/, "", $2); a[++i]=$2 } END { printf "%s %s", a[1], a[2] }' /etc/default/console-setup))"
 }
@@ -495,5 +495,13 @@ echo -e "${BANNER_COLOR}${lines[14]}${FIM}"
 exit 0
 
 
-## TODO: ##
-# -csc :: Change secondary text color ($SECONDARY_COLOR)
+# TODO #
+# 1.0:
+# add possibility to change user@host colors as well and
+# (Connected), (Disconnected) for more customization purposes
+#
+# 1.1:
+# improve main banner section to be more readable? and to support future changes (#474)
+
+
+# ver "<--" para mudanças
