@@ -485,7 +485,7 @@ echo -e "${BANNER_COLOR}${lines[6]}  ${SECONDARY_COLOR}Kernel${FIM}:\t\t $(KERNE
 echo -e "${BANNER_COLOR}${lines[7]}  ${SECONDARY_COLOR}Uptime${FIM}:\t\t $(UPTIME_FUNC)"
 echo -e "${BANNER_COLOR}${lines[8]}  ${SECONDARY_COLOR}Memory Usage:${FIM}:\t $(MEMUSE_FUNC)"
 echo -e "${BANNER_COLOR}${lines[9]}  ${SECONDARY_COLOR}Shell${FIM}:\t\t $(SHELL_FUNC)"
-echo -e "${BANNER_COLOR}${lines[10]}  ${SECONDARY_COLOR}DE & WM${FIM}:\t\t $(DE_WM_FUNC)"
+echo -e "${BANNER_COLOR}${lines[10]}  ${SECONDARY_COLOR}WM${FIM}:\t\t\t $(DE_WM_FUNC)"
 echo -e "${BANNER_COLOR}${lines[11]}${FIM}"
 echo -e "${BANNER_COLOR}${lines[12]}  ${ROXO}${MSG_//\"}${FIM}"
 echo -e "${BANNER_COLOR}${lines[13]}${FIM}"
